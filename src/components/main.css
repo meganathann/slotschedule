@@ -1,0 +1,261 @@
+:root {
+  --primary-color: #f7f7f7; /* Light Gray */
+  --secondary-color: #eeeeee; /* Extra Light Gray */
+  --background-color: #393e46; /* Charcoal Gray */
+  --text-color: #929aab; /* Slate Gray */
+  --selected-color: #45aaf2; /* Color for selected elements - Sky Blue */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: url("/src/img/bg.jpg") center center fixed;
+  background-size: cover; /* Ensure the image covers the entire body */
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-container {
+  max-width: 500px; /* Increase the max-width */
+  padding: 30px; /* Increase the padding */
+  background: rgba(
+    var(--primary-color),
+    var(--primary-color),
+    var(--primary-color),
+    0.8
+  ); /* Add a semi-transparent white background */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+input {
+  padding: 12px; /* Adjust input padding */
+  margin-bottom: 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+button {
+  padding: 14px; /* Adjust button padding */
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--selected-color);
+}
+
+/* Additional styles for responsiveness */
+@media (max-width: 600px) {
+  .login-container {
+    max-width: 100%;
+  }
+}
+
+/* Styling for the PhysioView component */
+.physio-view {
+  font-family: "Arial", sans-serif;
+  margin: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.day-buttons button {
+  margin: 5px; /* Add margin between day buttons */
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #45aaf2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+}
+
+h1 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.time-slots-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.time-slot-range {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-slot {
+  border: 1px solid var(--text-color);
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+  color: rgb(255, 255, 255);
+  background-color: #45aaf2;
+}
+
+.time-slot:hover {
+  background-color: var(--secondary-color);
+}
+
+.time-slot.selected {
+  background-color: blue;
+  color: rgb(0, 0, 0);
+  border-color: var(--selected-color);
+  border-radius: 5px;
+  border-style: double;
+  border-width: 5px;
+}
+
+/* Additional styling for demonstration purposes */
+.weekly-availability {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Styling for selected day and range */
+.day-buttons button.selected {
+  background-color: #6a95b4;
+  color: var(--secondary-color);
+  border-radius: 4px;
+}
+
+/* ... (other styles) */
+
+/* Add margin to day buttons */
+/* ... */
+
+/* Add margin to time range buttons */
+.time-range-filters button {
+  margin-right: 10px; /* Adjust margin as needed */
+  margin-bottom: 10px; /* Adjust margin as needed */
+  padding: 8px;
+  cursor: pointer;
+  background-color: var(--selected-color); /* Set button color */
+  color: white;
+  border: none;
+}
+
+/* Next button styling */
+.next-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 50px; /* Adjust as needed */
+}
+
+.next-button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* ... (other styles) */
+
+/* Styling for the modal */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  background-color: var(--primary-color);
+}
+
+td {
+  border: 1px solid var(--text-color);
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--secondary-color);
+  color: #ffffff;
+}
+
+/* Style for the text color inside modal table rows */
+.modal-content table td {
+  color: var(--text-color); /* Set the text color to dark gray */
+}
+
+/* ... (other styles) */
+
+/* Updated styles for remarks */
+.label-remarks {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.remarks-textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Media Query for tablets and larger screens */
+@media (min-width: 768px) {
+  .modal-content {
+    width: 60%;
+  }
+}
+
+/* Media Query for larger screens */
+@media (min-width: 1200px) {
+  .modal-content {
+    width: 50%;
+  }
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+}
+
+/* ... (other styles) */

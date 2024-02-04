@@ -1,0 +1,188 @@
+:root {
+  --primary-color: #ff847c; /* Primary color - Salmon Red */
+  --secondary-color: #fcbad3; /* Secondary color - Light Pink */
+  --background-color: #f0f4f7; /* Background color - Light Blue-Gray */
+  --text-color: #2c3e50; /* Text color - Dark gray for text */
+  --selected-color: black; /* Color for selected elements - Sky Blue */
+}
+
+/* Styling for the PhysioView component */
+.physio-view {
+  font-family: "Arial", sans-serif;
+  margin: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.day-buttons button {
+  margin: 5px; /* Add margin between day buttons */
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #45aaf2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+}
+
+h1 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.time-slots-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.time-slot-range {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-slot {
+  border: 1px solid var(--text-color);
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+  color: white;
+}
+
+.time-slot:hover {
+  background-color: var(--secondary-color);
+}
+
+.time-slot.selected {
+  background-color: var(--selected-color);
+  color: white; /* Set text color to white */
+  border-color: var(--selected-color);
+}
+
+/* Additional styling for demonstration purposes */
+.weekly-availability {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Styling for selected day and range */
+.day-buttons button.selected {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border-radius: 4px;
+}
+
+/* Styling for the selected class */
+.selected {
+  background-color: var(--selected-color);
+  color: #ffffff;
+  border-color: var(--selected-color);
+}
+
+/* Styling for the modal */
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  background-color: var(--primary-color);
+}
+
+td {
+  border: 1px solid var(--text-color);
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--secondary-color);
+  color: #ffffff;
+}
+
+/* Style for the text color inside modal table rows */
+.modal-content table td {
+  color: var(--text-color); /* Set the text color to dark gray */
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%; /* Adjust the width as needed */
+  max-width: 400px; /* Set a maximum width for the modal */
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.modal-content {
+  position: relative;
+  overflow-y: auto; /* Add overflow-y property for scroll if needed */
+  max-height: 400px; /* Set a maximum height for the modal content */
+}
+
+/* Style for the text color inside modal table rows */
+.modal-content table tbody td {
+  color: var(--text-color); /* Set the text color to dark gray */
+}
+
+.time-range-filters button {
+  margin-right: 5px; /* Add margin between range filter buttons */
+  margin-top: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+}
+
+/* Next button styling */
+.next-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 50px; /* Adjust as needed */
+}
+
+.next-button:hover {
+  background-color: var(--secondary-color);
+}

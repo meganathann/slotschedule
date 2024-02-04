@@ -1,0 +1,133 @@
+:root {
+  --primary-color: #ff847c; /* Primary color - Salmon Red */
+  --secondary-color: #fcbad3; /* Secondary color - Light Pink */
+  --background-color: #f0f4f7; /* Background color - Light Blue-Gray */
+  --text-color: black; /* Text color - Dark gray for text */
+  --selected-color: #45aaf2; /* Color for selected elements - Sky Blue */
+}
+
+.sales-view {
+  padding: 20px;
+}
+
+.time-slot-range,
+.day-buttons {
+  margin-bottom: 20px;
+}
+
+.physio-card {
+  margin-bottom: 20px;
+}
+
+.time-slots button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 8px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  background-color: #ff847c;
+}
+
+.time-slots button.selected {
+  background-color: var(--selected-color);
+  color: white;
+  font-weight: bold;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Updated styles for remarks */
+.label-remarks {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.remarks-textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Media Query for tablets and larger screens */
+@media (min-width: 768px) {
+  .modal-content {
+    width: 60%;
+  }
+}
+
+/* Media Query for larger screens */
+@media (min-width: 1200px) {
+  .modal-content {
+    width: 50%;
+  }
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    padding: 10px; /* Adjust padding for smaller screens */
+  }
+}
+
+/* ... (other styles) */
+
+.day-buttons {
+  margin-bottom: 20px;
+}
+
+.time-range-filters {
+  margin-bottom: 20px;
+}
+/* ... (existing styles) */
+
+/* Add margin to day buttons */
+/*  */
+
+/* Add margin to time range buttons */
+.time-range-filters button {
+  margin-right: 10px; /* Adjust margin as needed */
+  margin-bottom: 10px; /* Adjust margin as needed */
+  padding: 8px;
+  cursor: pointer;
+  background-color: #ff847c; /* Set button color */
+  color: white;
+  border: none;
+}
+
+/* ... (existing styles) */

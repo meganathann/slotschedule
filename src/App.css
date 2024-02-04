@@ -1,38 +1,68 @@
-.App {
-  text-align: center;
-}
+/* App.css */
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: url("/src/img/bg.jpg") center center fixed;
+  background-size: cover;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  min-height: 100vh;
 }
 
-.App-link {
-  color: #61dafb;
+.App {
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  padding: 0px;
+  background-color: #eeffff; /* Updated light blue-gray background color */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+button,
+.logout-button {
+  background-color: #45aaf2; /* Updated button background color */
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+button:hover,
+.logout-button:hover {
+  background-color: #9cfeff; /* Updated button hover color */
+}
+
+/* Additional styles for responsiveness */
+@media (max-width: 600px) {
+  .App {
+    padding: 0px; /* Adjusted padding for smaller screens */
   }
-  to {
-    transform: rotate(360deg);
+
+  button,
+  .logout-button {
+    width: 100%;
+    margin-bottom: 10px; /* Adjusted margin for smaller screens */
   }
+}
+
+.logout-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #45aaf2; /* Updated logout button background color */
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #9cfeff; /* Updated logout button hover color */
 }

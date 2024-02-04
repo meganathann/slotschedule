@@ -1,0 +1,76 @@
+:root {
+  --primary-color: #f7f7f7; /* Light Gray */
+  --secondary-color: #eeeeee; /* Extra Light Gray */
+  --background-color: #393e46; /* Charcoal Gray */
+  --text-color: #929aab; /* Slate Gray */
+  --selected-color: #45aaf2; /* Color for selected elements - Sky Blue */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: url("/src/img/bg.jpg") center center fixed;
+  background-size: cover; /* Ensure the image covers the entire body */
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-container {
+  max-width: 500px; /* Increase the max-width */
+  padding: 30px; /* Increase the padding */
+  background: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ); /* Add a semi-transparent white background */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+input {
+  padding: 12px; /* Adjust input padding */
+  margin-bottom: 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+button {
+  padding: 14px; /* Adjust button padding */
+  background-color: #ff847c;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--selected-color);
+}
+
+/* Additional styles for responsiveness */
+@media (max-width: 600px) {
+  .login-container {
+    max-width: 100%;
+  }
+}
