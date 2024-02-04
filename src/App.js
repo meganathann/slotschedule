@@ -8,7 +8,6 @@ import Login from "./components/Login";
 function App() {
   const [user, setUser] = useState(null);
 
-  // Define the users object locally
   const users = {
     physio: {
       id: 1,
@@ -47,7 +46,6 @@ function App() {
     if (authenticatedUser) {
       setUser(authenticatedUser);
     } else {
-      // Handle invalid credentials
       console.log("Invalid credentials");
     }
   };

@@ -3,14 +3,14 @@
   --secondary-color: #eeeeee; /* Extra Light Gray */
   --background-color: #393e46; /* Charcoal Gray */
   --text-color: #929aab; /* Slate Gray */
-  --selected-color: #45aaf2; /* Color for selected elements - Sky Blue */
+  --selected-color: #45aaf2;
 }
 
 body {
   margin: 0;
   padding: 0;
   background: url("/src/img/bg.jpg") center center fixed;
-  background-size: cover; /* Ensure the image covers the entire body */
+  background-size: cover;
   font-family: Arial, sans-serif;
   display: flex;
   align-items: center;
@@ -19,14 +19,14 @@ body {
 }
 
 .login-container {
-  max-width: 500px; /* Increase the max-width */
-  padding: 30px; /* Increase the padding */
+  max-width: 500px;
+  padding: 30px;
   background: rgba(
     var(--primary-color),
     var(--primary-color),
     var(--primary-color),
     0.8
-  ); /* Add a semi-transparent white background */
+  );
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -45,7 +45,7 @@ label {
 }
 
 input {
-  padding: 12px; /* Adjust input padding */
+  padding: 12px;
   margin-bottom: 16px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -54,7 +54,7 @@ input {
 }
 
 button {
-  padding: 14px; /* Adjust button padding */
+  padding: 14px;
   background-color: var(--primary-color);
   color: #fff;
   font-size: 16px;
@@ -68,14 +68,12 @@ button:hover {
   background-color: var(--selected-color);
 }
 
-/* Additional styles for responsiveness */
 @media (max-width: 600px) {
   .login-container {
     max-width: 100%;
   }
 }
 
-/* Styling for the PhysioView component */
 .physio-view {
   font-family: "Arial", sans-serif;
   margin: 20px;
@@ -86,7 +84,7 @@ button:hover {
 }
 
 .day-buttons button {
-  margin: 5px; /* Add margin between day buttons */
+  margin: 5px;
   padding: 8px 12px;
   cursor: pointer;
   background-color: #45aaf2;
@@ -135,36 +133,27 @@ h1 {
   border-width: 5px;
 }
 
-/* Additional styling for demonstration purposes */
 .weekly-availability {
   display: flex;
   flex-wrap: wrap;
 }
 
-/* Styling for selected day and range */
 .day-buttons button.selected {
   background-color: #6a95b4;
   color: var(--secondary-color);
   border-radius: 4px;
 }
 
-/* ... (other styles) */
-
-/* Add margin to day buttons */
-/* ... */
-
-/* Add margin to time range buttons */
 .time-range-filters button {
-  margin-right: 10px; /* Adjust margin as needed */
-  margin-bottom: 10px; /* Adjust margin as needed */
+  margin-right: 10px;
+  margin-bottom: 10px;
   padding: 8px;
   cursor: pointer;
-  background-color: var(--selected-color); /* Set button color */
+  background-color: var(--selected-color);
   color: white;
   border: none;
 }
 
-/* Next button styling */
 .next-button {
   background-color: var(--primary-color);
   color: white;
@@ -173,16 +162,13 @@ h1 {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
-  margin-bottom: 50px; /* Adjust as needed */
+  margin-bottom: 50px;
 }
 
 .next-button:hover {
   background-color: var(--secondary-color);
 }
 
-/* ... (other styles) */
-
-/* Styling for the modal */
 .close {
   position: absolute;
   top: 10px;
@@ -215,14 +201,10 @@ th {
   color: #ffffff;
 }
 
-/* Style for the text color inside modal table rows */
 .modal-content table td {
-  color: var(--text-color); /* Set the text color to dark gray */
+  color: var(--text-color);
 }
 
-/* ... (other styles) */
-
-/* Updated styles for remarks */
 .label-remarks {
   margin-top: 10px;
   font-weight: bold;
@@ -236,26 +218,21 @@ th {
   border: 1px solid #ddd;
 }
 
-/* Media Query for tablets and larger screens */
 @media (min-width: 768px) {
   .modal-content {
     width: 60%;
   }
 }
 
-/* Media Query for larger screens */
 @media (min-width: 1200px) {
   .modal-content {
     width: 50%;
   }
 }
 
-/* Media Query for smaller screens */
 @media (max-width: 600px) {
   .modal-content {
     width: 90%;
-    padding: 10px; /* Adjust padding for smaller screens */
+    padding: 10px;
   }
 }
-
-/* ... (other styles) */

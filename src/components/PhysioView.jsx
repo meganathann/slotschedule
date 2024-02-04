@@ -212,9 +212,9 @@ const PhysioView = ({ physioId, username }) => {
                 style={{
                   backgroundColor: timeSlot.available
                     ? timeSlot.selected
-                      ? "var(--secondary-color)" // Use secondary color for selected time slots
-                      : "var(--primary-color)" // Use primary color for selectable time slots
-                    : "#f1f1f1", // Grey for unavailable time slots
+                      ? "var(--secondary-color)"
+                      : "var(--primary-color)"
+                    : "#f1f1f1",
                   cursor: timeSlot.available ? "pointer" : "not-allowed",
                 }}
               >

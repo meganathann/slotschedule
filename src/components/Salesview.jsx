@@ -87,7 +87,6 @@ const CustomModal = ({
           sx={{ mt: 2, width: "100%" }}
         />
 
-        {/* Allot button */}
         <Button
           onClick={handleAllotButtonClick}
           variant="contained"
@@ -179,8 +178,6 @@ const SalesView = () => {
   const [remarks, setRemarks] = useState("");
 
   useEffect(() => {
-    // Fetch data from your API endpoint
-    // Uncomment and fill in the details if fetching from an API
     /*
     const fetchPhysiosAvailability = async () => {
       try {
@@ -206,17 +203,13 @@ const SalesView = () => {
   };
 
   const handleAllotButtonClick = () => {
-    // Check if remarks are provided before allotting the slot
     if (remarks.trim() === "") {
       alert("Please enter remarks before allotting the slot.");
       return;
     }
 
-    // Add logic for allotting the slot with remarks
-    // This is where you can perform any backend updates or show a confirmation message
-    // For now, we'll just log the selectedTimeSlot and remarks
     console.log("Selected Time Slot:", selectedTimeSlot);
-    console.log("Remarks:", remarks); // You can send the remarks to the backend as needed
+    console.log("Remarks:", remarks);
     setSelectedTimeSlot(null);
     setRemarks("");
   };

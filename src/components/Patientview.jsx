@@ -85,8 +85,6 @@ const PatientView = ({ username }) => {
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
 
   useEffect(() => {
-    // Fetch data from your API endpoint
-    // Uncomment and fill in the details if fetching from an API
     /*
     const fetchPhysiosAvailability = async () => {
       try {
