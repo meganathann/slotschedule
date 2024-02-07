@@ -1,0 +1,310 @@
+:root {
+  --primary-color: #f7f7f7; /* Light Gray */
+  --secondary-color: #eeeeee; /* Extra Light Gray */
+  --background-color: #393e46; /* Charcoal Gray */
+  --text-color: #929aab; /* Slate Gray */
+  --selected-color: #45aaf2;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: url("/src/img/bg.jpg") center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-container {
+  max-width: 500px;
+  padding: 30px;
+  background: rgba(
+    var(--primary-color),
+    var(--primary-color),
+    var(--primary-color),
+    0.8
+  );
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: var(--text-color);
+}
+
+input {
+  padding: 12px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+button {
+  padding: 14px;
+  background-color: var(--primary-color);
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #013ec0;
+  color: #e01111;
+}
+
+@media (max-width: 600px) {
+  .login-container {
+    max-width: 100%;
+  }
+}
+
+.physio-view {
+  font-family: "Arial", sans-serif;
+  margin: 20px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.day-buttons button {
+  margin: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #45aaf2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+}
+
+h1 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.time-slots-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.time-slot-range {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-slot {
+  border: 1px solid var(--text-color);
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 4px;
+  color: rgb(255, 255, 255);
+  background-color: #45aaf2;
+}
+
+.time-slot:hover {
+  background-color: var(--secondary-color);
+}
+
+.time-slot.selected {
+  background-color: blue;
+  color: rgb(0, 0, 0);
+  border-color: var(--selected-color);
+  border-radius: 5px;
+  border-style: double;
+  border-width: 5px;
+}
+
+.weekly-availability {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-buttons button.selected {
+  background-color: #000000;
+  color: #ff0000;
+  border-radius: 4px;
+}
+
+.time-range-filters button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+  padding: 8px;
+  cursor: pointer;
+  background-color: var(--selected-color);
+  color: white;
+  border: none;
+}
+
+.next-button {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+.next-button:hover {
+  background-color: var(--secondary-color);
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+h2 {
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  background-color: var(--primary-color);
+}
+
+td {
+  border: 1px solid var(--text-color);
+  padding: 8px;
+  text-align: left;
+}
+
+th {
+  background-color: var(--secondary-color);
+  color: #ffffff;
+}
+
+.modal-content table td {
+  color: var(--text-color);
+}
+
+.label-remarks {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.remarks-textarea {
+  width: 100%;
+  height: 100px;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+
+@media (min-width: 768px) {
+  .modal-content {
+    width: 60%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .modal-content {
+    width: 50%;
+  }
+}
+
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%;
+    padding: 10px;
+  }
+}
+.day-buttons button.selected {
+  background-color: #000000; /* New background color for selected button */
+  color: #ff0000; /* New text color for selected button */
+  border-radius: 4px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: url("/src/img/bg.jpg") center center fixed;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.App {
+  font-family: "Arial", sans-serif;
+  text-align: center;
+  padding: 0px;
+  background-color: #eeffff; /* Updated light blue-gray background color */
+}
+
+button,
+.logout-button {
+  background-color: #45aaf2; /* Updated button background color */
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+button:hover,
+.logout-button:hover {
+  background-color: #9cfeff;
+}
+
+@media (max-width: 600px) {
+  .App {
+    padding: 0px;
+  }
+
+  button,
+  .logout-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.logout-button {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #45aaf2;
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #9cfeff;
+}

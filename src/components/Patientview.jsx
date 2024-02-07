@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Button from "@mui/material/Button";
+import { Button as MuiButton } from "@mui/material";
+
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import "./main.css";
+// import "./main.css";
 
 const PatientView = ({ username }) => {
   const [physiosAvailability, setPhysiosAvailability] = useState([
@@ -142,7 +144,7 @@ const PatientView = ({ username }) => {
           <Grid container spacing={2}>
             {filteredTimeSlots.map((time) => (
               <Grid item key={time}>
-                <Button
+                <MuiButton
                   variant="contained"
                   className={`time-slot ${
                     selectedTimeSlot &&
@@ -154,7 +156,7 @@ const PatientView = ({ username }) => {
                   onClick={() => handleTimeSlotClick(time)}
                 >
                   {time}
-                </Button>
+                </MuiButton>
               </Grid>
             ))}
           </Grid>
@@ -192,24 +194,46 @@ const PatientView = ({ username }) => {
           <Button
             key={day}
             variant="contained"
-            className={selectedDay === day ? "selected" : ""}
+            className={`day-button ${selectedDay === day ? "selected" : ""}`}
             onClick={() => setSelectedDay(day)}
+            style={{
+              margin: "8px",
+              backgroundColor: selectedDay === day ? "#70a3c7" : "", // Change to your desired background color
+              color: selectedDay === day ? "#FFFFFF" : "#000000", // Change to your desired text color
+            }}
           >
             {day}
           </Button>
         ))}
         <br />
         {timeRanges.map((range, index) => (
-          <Button
+          <button
             key={index}
-            variant="contained"
-            className={
+            className={`filter-button ${
               selectedTimeRange && isTimeRangeSelected(range) ? "selected" : ""
-            }
+            } MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium`}
             onClick={() => handleTimeRangeButtonClick(range)}
+            style={{
+              margin: "8px",
+              padding: "4px 5px",
+              fontSize: "0.8rem",
+              backgroundColor: isTimeRangeSelected(range)
+                ? "#2196F3" // Change this to the color you want for the selected button
+                : "",
+              color: isTimeRangeSelected(range) ? "#FFFFFF" : "", // Change this to the text color of the selected button
+              border: "1px solid #2196F3", // Add border for outlined style
+              cursor: "pointer",
+              outline: "none",
+              display: "inline-block",
+              textDecoration: "none",
+              textAlign: "center",
+              verticalAlign: "middle",
+              borderRadius: "4px",
+            }}
+            type="button"
           >
             {`${range.start} - ${range.end}`}
-          </Button>
+          </button>
         ))}
       </div>
     );

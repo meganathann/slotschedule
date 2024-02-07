@@ -1,5 +1,3 @@
-// SalesView.js
-
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Modal from "@mui/material/Modal";
@@ -7,8 +5,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import TextareaAutosize from "@mui/material/TextareaAutosize";
-import "./main.css";
+import Grid from "@mui/material/Grid";
+import { Button as MuiButton } from "@mui/material";
 
 const CustomModal = ({
   selectedTimeSlot,
@@ -72,34 +70,37 @@ const CustomModal = ({
           <p>{`Day: ${selectedTimeSlot.day}`}</p>
           <p>{`Time: ${selectedTimeSlot.time}`}</p>
           <p>{`Physio: ${selectedTimeSlot.physioName}`}</p>
-          <p>{`Time Range: ${calculateTimeRange(selectedTimeSlot.time)}`}</p>
+
+          {/* Remarks input */}
+          <TextField
+            label="Remarks"
+            id="remarks"
+            multiline
+            rows={4}
+            value={remarks}
+            onChange={(e) => setRemarks(e.target.value)}
+            placeholder="Enter remarks here..."
+            sx={{ mt: 2, width: "100%" }}
+          />
+
+          <Button
+            onClick={handleAllotButtonClick}
+            variant="contained"
+            sx={{ mt: 2, mr: 2 }}
+          >
+            Allot
+          </Button>
+
+          <Button onClick={handleClose} variant="outlined" sx={{ mt: 2 }}>
+            Close
+          </Button>
         </Typography>
-
-        {/* Remarks input */}
-        <TextField
-          label="Remarks"
-          id="remarks"
-          multiline
-          rows={4}
-          value={remarks}
-          onChange={(e) => setRemarks(e.target.value)}
-          placeholder="Enter remarks here..."
-          sx={{ mt: 2, width: "100%" }}
-        />
-
-        <Button
-          onClick={handleAllotButtonClick}
-          variant="contained"
-          sx={{ mt: 2 }}
-        >
-          Allot
-        </Button>
       </Box>
     </Modal>
   );
 };
 
-const SalesView = () => {
+const SalesView = ({ username, physioId }) => {
   const [physiosAvailability, setPhysiosAvailability] = useState([
     {
       _id: {
@@ -162,6 +163,36 @@ const SalesView = () => {
       __v: 0,
     },
   ]);
+  const isTimeInRange = (selectedTime, range) => {
+    if (!range) {
+      return false;
+    }
+
+    const selectedMoment = moment(selectedTime, "hh:mm A");
+    const startMoment = moment(range.start, "hh:mm A");
+    const endMoment = moment(range.end, "hh:mm A");
+
+    return (
+      selectedMoment.isSameOrAfter(startMoment) &&
+      selectedMoment.isBefore(endMoment)
+    );
+  };
+  const renderModal = () => {
+    if (!selectedTimeSlot) {
+      return null;
+    }
+
+    return (
+      <CustomModal
+        selectedTimeSlot={selectedTimeSlot}
+        setRemarks={setRemarks}
+        remarks={remarks}
+        handleAllotButtonClick={handleAllotButtonClick}
+        handleClose={() => setSelectedTimeSlot(null)}
+        isTimeInRange={isTimeInRange}
+      />
+    );
+  };
 
   const ranges = [
     { start: "5:00 AM", end: "8:00 AM" },
@@ -176,42 +207,78 @@ const SalesView = () => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [remarks, setRemarks] = useState("");
+  const [lockedTimeSlots, setLockedTimeSlots] = useState([]);
+
+  // ...
 
   useEffect(() => {
-    /*
     const fetchPhysiosAvailability = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/getPhysiosAvailability");
+        const response = await fetch(
+          "http://localhost:3001/physioview/availabletimeslots"
+          // Updated endpoint to the correct one
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const data = await response.json();
         setPhysiosAvailability(data);
       } catch (error) {
-        console.error("Error fetching physios availability:", error);
+        console.error("Error fetching physios availability:", error.message);
       }
     };
 
-    // Uncomment the line below and remove the sample data if fetching from an API
-    // fetchPhysiosAvailability();
-    */
+    fetchPhysiosAvailability();
   }, []);
+
+  // ...
 
   const handleTimeSlotClick = (physio, time) => {
     setSelectedTimeSlot({
       day: selectedDay,
       time,
       physioName: physio.physioName,
+      physioId: physio.physioId,
     });
   };
 
-  const handleAllotButtonClick = () => {
+  const handleAllotButtonClick = async () => {
     if (remarks.trim() === "") {
       alert("Please enter remarks before allotting the slot.");
       return;
     }
 
-    console.log("Selected Time Slot:", selectedTimeSlot);
-    console.log("Remarks:", remarks);
-    setSelectedTimeSlot(null);
-    setRemarks("");
+    try {
+      // Send a request to lock time slots with remarks
+      const response = await fetch(
+        "http://localhost:3001/salesview/locktimeslot",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            physioId: selectedTimeSlot.physioId,
+            remarks: remarks,
+          }),
+        }
+      );
+
+      const data = await response.json();
+      console.log("Response from server:", data);
+
+      // Update the state with the locked time slots
+      setLockedTimeSlots(data.lockedTimeSlots);
+
+      // Reset the state after successful locking
+      setSelectedTimeSlot(null);
+      setRemarks("");
+    } catch (error) {
+      console.error("Error locking time slots:", error);
+      // Handle error as needed
+    }
   };
 
   const renderDayButtons = () => {
@@ -227,13 +294,14 @@ const SalesView = () => {
     return (
       <div className="day-buttons">
         {weekDays.map((day) => (
-          <button
+          <Button
             key={day}
-            className={selectedDay === day ? "selected" : ""}
+            variant={selectedDay === day ? "contained" : "outlined"}
             onClick={() => setSelectedDay(day)}
+            sx={{ m: 1 }}
           >
             {day}
-          </button>
+          </Button>
         ))}
       </div>
     );
@@ -274,13 +342,15 @@ const SalesView = () => {
 
     return (
       <div className="time-slot-range">
-        <h3>Available Time Slots for {selectedDay}:</h3>
+        <Typography variant="h5" gutterBottom>
+          Available Time Slots for {selectedDay}:
+        </Typography>
         {filteredTimeSlots.length > 0 ? (
-          <div className="physio-card">
-            <div className="time-slots">
-              {filteredTimeSlots.map((av) => (
-                <button
-                  key={`${av.physioId}-${av.time}`}
+          <Grid container spacing={2}>
+            {filteredTimeSlots.map((av) => (
+              <Grid item key={`${av.physioId}-${av.time}`}>
+                <MuiButton
+                  variant="contained"
                   className={`time-slot ${
                     selectedTimeSlot &&
                     selectedTimeSlot.day === selectedDay &&
@@ -291,10 +361,10 @@ const SalesView = () => {
                   onClick={() => handleTimeSlotClick(av, av.time)}
                 >
                   {av.time}
-                </button>
-              ))}
-            </div>
-          </div>
+                </MuiButton>
+              </Grid>
+            ))}
+          </Grid>
         ) : (
           <p>
             No available time slots in the specified range for the selected day.
@@ -303,39 +373,6 @@ const SalesView = () => {
       </div>
     );
   };
-
-  const renderModal = () => {
-    if (!selectedTimeSlot) {
-      return null;
-    }
-
-    return (
-      <CustomModal
-        selectedTimeSlot={selectedTimeSlot}
-        setRemarks={setRemarks}
-        remarks={remarks}
-        handleAllotButtonClick={handleAllotButtonClick}
-        handleClose={() => setSelectedTimeSlot(null)}
-        isTimeInRange={isTimeInRange}
-      />
-    );
-  };
-
-  const isTimeInRange = (selectedTime, range) => {
-    if (!range) {
-      return false;
-    }
-
-    const selectedMoment = moment(selectedTime, "hh:mm A");
-    const startMoment = moment(range.start, "hh:mm A");
-    const endMoment = moment(range.end, "hh:mm A");
-
-    return (
-      selectedMoment.isSameOrAfter(startMoment) &&
-      selectedMoment.isBefore(endMoment)
-    );
-  };
-
   const handleTimeRangeButtonClick = (range) => {
     setSelectedTimeRange(isTimeRangeSelected(range) ? null : range);
   };
@@ -350,23 +387,32 @@ const SalesView = () => {
 
   return (
     <Box className="sales-view" component="div">
+      <Typography variant="h5" gutterBottom>
+        Welcome, {username}!
+      </Typography>
       <h1>Sales View</h1>
       <div className="day-buttons">{renderDayButtons()}</div>
       <div className="time-range-filters">
         {ranges.map((range, index) => (
-          <button
+          <Button
             key={index}
             className={
               selectedTimeRange && isTimeRangeSelected(range) ? "selected" : ""
             }
             onClick={() => handleTimeRangeButtonClick(range)}
+            variant={
+              selectedTimeRange && isTimeRangeSelected(range)
+                ? "contained"
+                : "outlined"
+            }
+            sx={{ m: 1 }}
           >
             {`${range.start} - ${range.end}`}
-          </button>
+          </Button>
         ))}
       </div>
       {renderTimeSlotsForDay()}
-      {renderModal()}
+      {renderModal()} {/* Ensure renderModal is called here */}
     </Box>
   );
 };

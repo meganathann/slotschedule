@@ -11,8 +11,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-
-import "./main.css";
+import { Button as MuiButton } from "@mui/material";
 
 const PhysioView = ({ physioId, username }) => {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -22,6 +21,7 @@ const PhysioView = ({ physioId, username }) => {
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
   const handleDaySelection = (day) => {
     setSelectedDay(day);
@@ -46,6 +46,19 @@ const PhysioView = ({ physioId, username }) => {
       );
     });
 
+    if (isOverlapping) {
+      setAlertMessage(
+        "Time slot cannot be selected within 45 minutes of another slot."
+      );
+
+      // Clear the alert message after 3 to 5 seconds
+      setTimeout(() => {
+        setAlertMessage(null);
+      }, 3000); // 3 seconds in milliseconds
+
+      return;
+    }
+
     setWeeklyAvailability((prevAvailability) => {
       const updatedAvailability = [...prevAvailability];
       const existingSlotIndex = updatedAvailability.findIndex(
@@ -54,7 +67,7 @@ const PhysioView = ({ physioId, username }) => {
 
       if (existingSlotIndex !== -1) {
         updatedAvailability.splice(existingSlotIndex, 1);
-      } else if (!isOverlapping) {
+      } else {
         updatedAvailability.push({ day: selectedDay, time });
       }
 
@@ -212,11 +225,21 @@ const PhysioView = ({ physioId, username }) => {
                 style={{
                   backgroundColor: timeSlot.available
                     ? timeSlot.selected
-                      ? "var(--secondary-color)"
+                      ? "#3498db" // Blue color for selected time slots
                       : "var(--primary-color)"
                     : "#f1f1f1",
                   cursor: timeSlot.available ? "pointer" : "not-allowed",
+                  color: timeSlot.selected ? "#fff" : "#000", // Text color for selected time slots
+                  borderRadius: "4px", // Rounded corners
+                  padding: "10px", // Adjust padding as needed
+                  margin: "5px", // Adjust margin as needed
+                  border: timeSlot.available ? "1px solid #000" : "none", // Border for outlined slots
                 }}
+                variant={
+                  timeSlot.available && timeSlot.selected
+                    ? "contained"
+                    : "outlined"
+                }
               >
                 {timeSlot.time}
               </Button>
@@ -226,7 +249,6 @@ const PhysioView = ({ physioId, username }) => {
       </Paper>
     );
   };
-
   const renderTimeSlotsForWeek = () => {
     if (!selectedRange) {
       return (
@@ -243,32 +265,97 @@ const PhysioView = ({ physioId, username }) => {
     );
   };
 
-  const handleConfirmSlots = async () => {
+  const saveSlotsToDatabase = async (requestData) => {
     try {
-      const requestData = {
-        physioId: physioId,
-        weeklyAvailability: weeklyAvailability,
-      };
+      // Replace this with your logic for saving slots to the database
+      console.log("Saving slots to the database:", requestData);
 
-      const response = await fetch("http://localhost:3001/api/saveSlots", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
-      });
+      // Example: Use fetch to send a POST request to the database endpoint
+      const response = await fetch(
+        "http://localhost:3001/physioview/saveslots",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
 
       const responseData = await response.json();
 
-      if (responseData.success) {
+      // Log the response for debugging
+      console.log("Database response:", responseData);
+
+      if (response.ok) {
+        console.log("Slots saved to the database successfully!");
+        setConfirmationMessage("Slots saved to the database successfully!");
+      } else {
+        console.error(
+          "Error saving slots to the database:",
+          responseData.error
+        );
+        setConfirmationMessage("Error saving slots to the database");
+      }
+    } catch (error) {
+      console.error("Error saving slots to the database:", error);
+      setConfirmationMessage("Error saving slots to the database");
+    }
+  };
+
+  const handleConfirmSlots = async () => {
+    let requestData; // Declare requestData outside the try block
+
+    try {
+      requestData = {
+        physioId: physioId.toString(),
+        weeklyAvailability: weeklyAvailability.map(({ day, time }) => ({
+          day,
+          time,
+        })),
+      };
+
+      console.log("Request Data:", requestData);
+
+      const response = await fetch(
+        "http://localhost:3001/physioview/choosetimeslot",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+
+      const responseData = await response.json();
+
+      // Log the response for debugging
+      console.log("Server response:", responseData);
+
+      if (response.ok) {
         setConfirmationMessage("Slots confirmed and saved successfully!");
       } else {
-        console.error("Error saving slots:", responseData.error);
+        console.error("Error confirming slots:", responseData.error);
+
+        // Display a user-friendly error message if needed
+        // alert(`Error: ${responseData.error}`);
+
+        // Proceed to save slots to the database even if there is an error
+        saveSlotsToDatabase(requestData);
       }
     } catch (error) {
       console.error("Error confirming slots:", error);
+
+      // Display a generic error message if needed
+      // alert("An error occurred while confirming slots. Please try again.");
+
+      // Proceed to save slots to the database even if there is an error
+      saveSlotsToDatabase(requestData);
     }
   };
+
+  // Rest of the code...
 
   const renderModal = () => {
     if (!showModal) {
@@ -307,43 +394,54 @@ const PhysioView = ({ physioId, username }) => {
             {confirmationMessage ? (
               <Typography>{confirmationMessage}</Typography>
             ) : (
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Time</TableCell>
-                    {uniqueTimes.map((time) => (
-                      <TableCell key={time} align="center">
-                        {time}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.keys(slotsByDayAndTime).map((day) => (
-                    <TableRow key={day}>
-                      <TableCell>{day}</TableCell>
+              <>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Time</TableCell>
                       {uniqueTimes.map((time) => (
-                        <TableCell key={`${day}-${time}`} align="center">
-                          {slotsByDayAndTime[day][time] ? "X" : ""}
+                        <TableCell key={time} align="center">
+                          {time}
                         </TableCell>
                       ))}
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHead>
+                  <TableBody>
+                    {Object.keys(slotsByDayAndTime).map((day) => (
+                      <TableRow key={day}>
+                        <TableCell>{day}</TableCell>
+                        {uniqueTimes.map((time) => (
+                          <TableCell key={`${day}-${time}`} align="center">
+                            {slotsByDayAndTime[day][time] ? "X" : ""}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <Button
+                  onClick={handleConfirmSlots}
+                  variant="contained"
+                  sx={{ mt: 2 }}
+                >
+                  Confirm Slots
+                </Button>
+              </>
             )}
             <Button
-              onClick={handleConfirmSlots}
-              variant="contained"
-              sx={{ mt: 2 }}
+              onClick={() => setShowModal(false)}
+              variant="outlined"
+              sx={{ mt: 2, ml: 1 }}
             >
-              Confirm Slots
+              Close
             </Button>
           </Paper>
         </Box>
       </Modal>
     );
   };
+
+  // ...
 
   return (
     <div className="physio-view">
@@ -371,6 +469,11 @@ const PhysioView = ({ physioId, username }) => {
         )}
         {renderModal()}
       </div>
+      {alertMessage && (
+        <div className="alert">
+          <Typography color="error">{alertMessage}</Typography>
+        </div>
+      )}
     </div>
   );
 };

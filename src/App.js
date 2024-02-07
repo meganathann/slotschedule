@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import "./App.css";
+// import "./components/main.css";
 import PhysioView from "./components/PhysioView";
 import PatientView from "./components/Patientview";
 import SalesView from "./components/Salesview";
 import Login from "./components/Login";
+import Button from "@mui/material/Button";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -33,7 +34,7 @@ function App() {
     const authenticatedUser = Object.values(users).find((u) => {
       if (u && u.username && u.password) {
         const lowercaseUsername = u.username.toLowerCase();
-        const lowercaseInputUsername = credentials.user_id.toLowerCase();
+        const lowercaseInputUsername = credentials.email.toLowerCase();
 
         return (
           lowercaseUsername === lowercaseInputUsername &&
@@ -58,9 +59,6 @@ function App() {
     <div className="App">
       {user ? (
         <>
-          <button onClick={handleLogout} className="logout-button">
-            Logout
-          </button>
           {user.role === "physio" ? (
             <PhysioView username={user.username} physioId={user.id} />
           ) : user.role === "sales" ? (
@@ -68,6 +66,11 @@ function App() {
           ) : user.role === "patient" ? (
             <PatientView username={user.username} />
           ) : null}
+          <div className="logout-container">
+            <Button onClick={handleLogout} variant="outlined" color="primary">
+              Logout
+            </Button>
+          </div>
         </>
       ) : (
         <Login onLogin={handleLogin} />

@@ -65,3 +65,9 @@ button:hover,
 .logout-button:hover {
   background-color: #9cfeff;
 }
+.logout-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
