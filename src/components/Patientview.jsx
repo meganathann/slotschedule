@@ -206,7 +206,7 @@ const PatientView = ({ username }) => {
         }}
       >
         <Typography variant="h4" gutterBottom sx={{ color: "#007bff" }}>
-          PhysioView
+          PatientView
         </Typography>
       </Box>
       <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
