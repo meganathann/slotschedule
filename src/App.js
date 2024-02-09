@@ -72,16 +72,15 @@ function App() {
           <div className="logout-container">
             <Button
               onClick={handleLogout}
-              variant="outlined"
+              variant="contained"
               color="primary"
               sx={{
+                backgroundColor: "#45aaf2",
+                color: "#fff",
                 "&:hover": {
-                  backgroundColor: "#61dafb",
-                  color: "#fff",
+                  backgroundColor: "#61dafb", // Change the hover color as needed
                 },
               }}
-              onMouseEnter={() => setLogoutHovered(true)}
-              onMouseLeave={() => setLogoutHovered(false)}
             >
               Logout
             </Button>

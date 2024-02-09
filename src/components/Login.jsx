@@ -30,6 +30,7 @@ const Login = ({ onLogin }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        width: 280,
       }}
     >
       <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>

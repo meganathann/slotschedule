@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const PatientView = ({ username }) => {
   const [physiosAvailability, setPhysiosAvailability] = useState([]);
@@ -184,12 +185,30 @@ const PatientView = ({ username }) => {
 
   return (
     <div className="patient-view">
-      <Typography variant="h4" gutterBottom>
-        Welcome, {username}!
-      </Typography>
-      <Typography variant="h5" gutterBottom>
-        Patient View
-      </Typography>
+      <Box
+        sx={{
+          border: "1px solid #ccc",
+          padding: "10px",
+          marginBottom: "15px",
+          bgcolor: "#fff",
+        }}
+      >
+        <Typography variant="h5" gutterBottom sx={{ color: "#333" }}>
+          Welcome, {username}!
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          border: "2px solid #007bff",
+          padding: "15px",
+          marginBottom: "20px",
+          bgcolor: "#fff",
+        }}
+      >
+        <Typography variant="h4" gutterBottom sx={{ color: "#007bff" }}>
+          PhysioView
+        </Typography>
+      </Box>
       <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
