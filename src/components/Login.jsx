@@ -7,6 +7,7 @@ import Avatar from "@mui/material/Avatar";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { Link, Grid } from "@mui/material";
+import "./main.css";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");

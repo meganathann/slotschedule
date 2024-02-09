@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [logoutHovered, setLogoutHovered] = useState(false);
 
   const users = {
     physio: {
@@ -47,12 +48,14 @@ function App() {
     if (authenticatedUser) {
       setUser(authenticatedUser);
     } else {
-      console.log("Invalid credentials");
+      // Display alert for invalid credentials
+      alert("Invalid credentials. Please try again.");
     }
   };
 
   const handleLogout = () => {
     setUser(null);
+    setLogoutHovered(false); // Reset hover state when logging out
   };
 
   return (
@@ -67,7 +70,19 @@ function App() {
             <PatientView username={user.username} />
           ) : null}
           <div className="logout-container">
-            <Button onClick={handleLogout} variant="outlined" color="primary">
+            <Button
+              onClick={handleLogout}
+              variant="outlined"
+              color="primary"
+              sx={{
+                "&:hover": {
+                  backgroundColor: "#61dafb",
+                  color: "#fff",
+                },
+              }}
+              onMouseEnter={() => setLogoutHovered(true)}
+              onMouseLeave={() => setLogoutHovered(false)}
+            >
               Logout
             </Button>
           </div>

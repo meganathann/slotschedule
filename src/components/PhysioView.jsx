@@ -16,6 +16,8 @@ import { Button as MuiButton } from "@mui/material";
 const PhysioView = ({ physioId, username }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [weeklyAvailability, setWeeklyAvailability] = useState([]);
+  const [hovered, setHovered] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const [disableTimeSlots, setDisableTimeSlots] = useState(false);
   const [selectedRange, setSelectedRange] = useState(null);
@@ -267,14 +269,13 @@ const PhysioView = ({ physioId, username }) => {
     };
 
     // ...
-
     return (
       <Paper sx={{ p: 2, mt: 2 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
           {selectedDay}'s Available Time Slots
         </Typography>
         <Grid container spacing={1}>
-          {timeSlots.map((timeSlot) => (
+          {timeSlots.map((timeSlot, index) => (
             <Grid item key={`${selectedDay}-${timeSlot.time}`}>
               <Button
                 className={`time-slot ${timeSlot.selected ? "selected" : ""}`}
@@ -287,12 +288,19 @@ const PhysioView = ({ physioId, username }) => {
                       ? "#45aaf2"
                       : "var(--primary-color)"
                     : "#f1f1f1",
-                  cursor: timeSlot.available ? "pointer" : "not-allowed",
                   color: timeSlot.selected ? "#fff" : "#45aaf2",
                   borderRadius: "4px",
                   padding: "10px",
                   margin: "5px",
                   border: timeSlot.available ? "1px solid #000" : "none",
+                  // Add inline hover styles for the hovered time slot
+                  ...(timeSlot.available &&
+                    index === hoveredIndex && {
+                      backgroundColor: "#61dafb",
+                      color: "#fff",
+                      borderColor: "#61dafb",
+                      cursor: "pointer",
+                    }),
                 }}
                 variant={
                   timeSlot.available && timeSlot.selected
@@ -305,21 +313,19 @@ const PhysioView = ({ physioId, username }) => {
                   (slot) =>
                     slot.day === selectedDay && slot.time === timeSlot.time
                 )}
+                onMouseEnter={() => {
+                  if (timeSlot.available) setHoveredIndex(index);
+                }}
+                onMouseLeave={() => setHoveredIndex(null)}
               >
                 {timeSlot.time}
               </Button>
             </Grid>
           ))}
         </Grid>
-        {/* {disableTimeSlots && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            The time slot is already selected
-          </Typography>
-        )} */}
       </Paper>
     );
   };
-
   const renderTimeSlotsForWeek = () => {
     if (!selectedRange) {
       return (
