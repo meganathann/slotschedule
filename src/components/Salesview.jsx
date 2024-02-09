@@ -92,7 +92,7 @@ const SalesView = ({ username, users }) => {
   useEffect(() => {
     const fetchUserAvailability = async () => {
       try {
-        console.log("Request parameters:", { physioId: 1, username });
+        // console.log("Request parameters:", { physioId: 1, username });
         const response = await fetch(
           `https://slottheschedule.onrender.com/physioview/useravailability?physioId=1&username=physio@example.com`
         );
@@ -106,7 +106,7 @@ const SalesView = ({ username, users }) => {
         const data = await response.json();
         setUserAvailability(data);
       } catch (error) {
-        console.error("Error fetching user availability:", error);
+        // console.error("Error fetching user availability:", error);
       }
     };
 
@@ -139,7 +139,7 @@ const SalesView = ({ username, users }) => {
     }
 
     try {
-      console.log("Sending POST request to server...");
+      // console.log("Sending POST request to server...");
 
       const response = await fetch(
         "https://slottheschedule.onrender.com/physioview/choosetimeslot",
@@ -169,12 +169,12 @@ const SalesView = ({ username, users }) => {
       }
 
       const data = await response.json();
-      console.log("Allotment response:", data);
+      // console.log("Allotment response:", data);
 
       setSelectedTimeSlot(null);
       setRemarks("");
     } catch (error) {
-      console.error("Error allotting time slot:", error);
+      // console.error("Error allotting time slot:", error);
     }
   };
   const renderDayButtons = () => {
