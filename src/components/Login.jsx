@@ -1,4 +1,3 @@
-// Login.jsx
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -51,7 +50,7 @@ const Login = ({ onLogin }) => {
         autoFocus
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        sx={{ width: "100%" }} // Adjusted width
+        sx={{ width: "100%" }}
       />
 
       <TextField
@@ -65,7 +64,7 @@ const Login = ({ onLogin }) => {
         autoComplete="current-password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        sx={{ width: "100%" }} // Adjusted width
+        sx={{ width: "100%" }}
       />
 
       <Button type="submit" variant="contained" color="primary" fullWidth>

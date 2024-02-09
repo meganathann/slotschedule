@@ -11,12 +11,13 @@ const PatientView = ({ username }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
+  const [userAvailability, setUserAvailability] = useState([]);
 
   useEffect(() => {
     const fetchPhysiosAvailability = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3001/api/getPhysiosAvailability"
+          `https://slottheschedule.onrender.com/physioview/useravailability?physioId=1&username=physio@example.com`
         );
 
         if (!response.ok) {
@@ -24,15 +25,15 @@ const PatientView = ({ username }) => {
         }
 
         const data = await response.json();
-        console.log("Fetched physios availability:", data);
-        setPhysiosAvailability(data);
+        console.log("Fetched physio availability:", data);
+        setUserAvailability(data);
       } catch (error) {
-        console.error("Error fetching physios availability:", error.message);
+        console.error("Error fetching physio availability:", error.message);
       }
     };
 
     fetchPhysiosAvailability();
-  }, []);
+  }, [username]);
 
   const handleTimeSlotClick = (time) => {
     setSelectedTimeSlot({
@@ -43,22 +44,24 @@ const PatientView = ({ username }) => {
 
   const renderTimeSlotsForDay = () => {
     if (!selectedDay || !selectedTimeRange) {
+      console.log("Select a day and time range to see available time slots.");
       return <p>Select a day and time range to see available time slots.</p>;
     }
 
-    const filteredTimeSlots = physiosAvailability
-      .filter((physio) =>
-        physio.weeklyAvailability.some(
-          (availability) =>
-            availability.day === selectedDay && isTimeInRange(availability.time)
-        )
+    const uniqueTimeSlots = new Set();
+
+    userAvailability
+      .filter(
+        (availability) =>
+          availability.day === selectedDay &&
+          isTimeInRange(availability.time, selectedTimeRange) &&
+          !availability.remarks
       )
-      .map((physio) =>
-        physio.weeklyAvailability
-          .filter((availability) => isTimeInRange(availability.time))
-          .map((availability) => availability.time)
-      )
-      .flat();
+      .forEach((availability) => {
+        uniqueTimeSlots.add(availability.time);
+      });
+
+    const filteredTimeSlots = Array.from(uniqueTimeSlots);
 
     return (
       <div className="time-slot-range">
@@ -78,7 +81,12 @@ const PatientView = ({ username }) => {
                       ? "selected"
                       : ""
                   }`}
-                  onClick={() => handleTimeSlotClick(time)}
+                  onClick={() =>
+                    handleTimeSlotClick({
+                      day: selectedDay,
+                      time,
+                    })
+                  }
                 >
                   {time}
                 </Button>
@@ -86,9 +94,7 @@ const PatientView = ({ username }) => {
             ))}
           </Grid>
         ) : (
-          <p>
-            No available time slots in the specified range for the selected day.
-          </p>
+          <p>No available time slots in the specified range.</p>
         )}
       </div>
     );
@@ -155,7 +161,6 @@ const PatientView = ({ username }) => {
       </div>
     );
   };
-
   const isTimeInRange = (selectedTime) => {
     if (!selectedTimeRange) {
       return false;

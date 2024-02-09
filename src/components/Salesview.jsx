@@ -8,8 +8,6 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button as MuiButton } from "@mui/material";
 
-// ... (imports)
-
 const CustomModal = ({
   selectedTimeSlot,
   setRemarks,
@@ -30,7 +28,8 @@ const CustomModal = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          width: 400,
+          width: "90%",
+          maxWidth: "400px",
           bgcolor: "background.paper",
           boxShadow: 24,
           p: 4,
@@ -95,7 +94,7 @@ const SalesView = ({ username, users }) => {
       try {
         console.log("Request parameters:", { physioId: 1, username });
         const response = await fetch(
-          `http://localhost:3001/physioview/useravailability?physioId=1&username=physio@example.com`
+          `https://slottheschedule.onrender.com/physioview/useravailability?physioId=1&username=physio@example.com`
         );
 
         if (!response.ok) {
@@ -134,26 +133,56 @@ const SalesView = ({ username, users }) => {
     setSelectedTimeSlot({
       day: selectedDay,
       time,
-      physioName: availability.username, // Make sure availability contains username
+      physioName: availability.username,
       physioId: availability.physioId,
     });
   };
 
-  const handleAllotButtonClick = () => {
+  const handleAllotButtonClick = async () => {
     if (remarks.trim() === "") {
       alert("Please enter remarks before allotting the slot.");
       return;
     }
 
-    // Simulate backend interaction by logging data
-    console.log("Remarks:", remarks);
-    console.log("Selected Time Slot:", selectedTimeSlot);
+    try {
+      console.log("Sending POST request to server...");
 
-    // Reset the state after simulated backend interaction
-    setSelectedTimeSlot(null);
-    setRemarks("");
+      const response = await fetch(
+        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            physioId: parseInt(selectedTimeSlot.physioId),
+            username,
+            weeklyAvailability: [
+              {
+                day: selectedTimeSlot.day,
+                time: selectedTimeSlot.time,
+                remark: remarks,
+              },
+            ],
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to allot time slot. Status: ${response.status}`
+        );
+      }
+
+      const data = await response.json();
+      console.log("Allotment response:", data);
+
+      setSelectedTimeSlot(null);
+      setRemarks("");
+    } catch (error) {
+      console.error("Error allotting time slot:", error);
+    }
   };
-
   const renderDayButtons = () => {
     const weekDays = [
       "Monday",
@@ -185,20 +214,35 @@ const SalesView = ({ username, users }) => {
       return <p>Select a day and time range to see available time slots.</p>;
     }
 
+    const uniqueTimeSlots = [];
     const filteredTimeSlots = userAvailability
-      .filter((availability) => availability.day === selectedDay)
-      .map((availability) => ({
-        time: availability.time,
-      }));
+      .filter(
+        (availability) =>
+          availability.day === selectedDay &&
+          isTimeInRange(availability.time, selectedTimeRange)
+      )
+      .forEach((availability) => {
+        const timeSlot = {
+          time: moment(availability.time, "HH:mm").format("h:mm A"),
+        };
+
+        const isDuplicate = uniqueTimeSlots.some(
+          (slot) => slot.time === timeSlot.time
+        );
+
+        if (!isDuplicate) {
+          uniqueTimeSlots.push(timeSlot);
+        }
+      });
 
     return (
       <div className="time-slot-range">
         <Typography variant="h5" gutterBottom>
           Available Time Slots for {selectedDay}:
         </Typography>
-        {filteredTimeSlots.length > 0 ? (
+        {uniqueTimeSlots.length > 0 ? (
           <Grid container spacing={2}>
-            {filteredTimeSlots.map((av) => (
+            {uniqueTimeSlots.map((av) => (
               <Grid item key={av.time}>
                 <MuiButton
                   variant="contained"

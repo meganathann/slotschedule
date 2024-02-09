@@ -259,12 +259,12 @@ body {
   font-family: "Arial", sans-serif;
   text-align: center;
   padding: 0px;
-  background-color: #eeffff; /* Updated light blue-gray background color */
+  background-color: #eeffff;
 }
 
 button,
 .logout-button {
-  background-color: #45aaf2; /* Updated button background color */
+  background-color: #45aaf2;
   color: #fff;
   padding: 10px 15px;
   font-size: 16px;

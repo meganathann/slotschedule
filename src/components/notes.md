@@ -290,7 +290,7 @@ console.log("Saving slots to the database:", requestData);
 
       // Example: Use fetch to send a POST request to the database endpoint
       const response = await fetch(
-        "http://localhost:3001/physioview/choosetimeslot",
+        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -338,7 +338,7 @@ let requestData; // Declare requestData outside the try block
       console.log("Request Data:", requestData);
 
       const response = await fetch(
-        "http://localhost:3001/physioview/choosetimeslot",
+        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -466,6 +466,7 @@ return null;
 // ...
 
 return (
+
 <div className="physio-view">
 <Typography variant="h5" gutterBottom>
 Welcome, {username}!

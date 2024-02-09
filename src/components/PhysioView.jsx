@@ -33,18 +33,9 @@ const PhysioView = ({ physioId, username }) => {
     setDisableTimeSlots(false);
 
     try {
-      // Fetch existing locked time slots for the selected day
       const response = await fetch(
-        `http://localhost:3001/physioview/lockedtimeslots?physioId=${physioId}&username=${username}`
+        `https://slottheschedule.onrender.com/physioview/lockedtimeslots?physioId=${physioId}&username=${username}`
       );
-      const lockedTimeSlots = await response.json();
-
-      // Check if there are any locked time slots for the selected day
-      if (lockedTimeSlots.length > 0) {
-        // setAlertMessage(
-        //   "Warning: You already have selected time slots for this day."
-        // );
-      }
     } catch (error) {
       console.error("Error fetching locked time slots:", error);
     }
@@ -68,15 +59,12 @@ const PhysioView = ({ physioId, username }) => {
       );
     });
 
-    // Set the alert only if there is an overlap
     if (isOverlapping) {
-      // Check if the alert is already set in the other location
       if (!alertMessage) {
         setAlertMessage(
           "Time slot cannot be selected within 45 minutes of another slot."
         );
 
-        // Clear the alert message after 3 to 5 seconds
         setTimeout(() => {
           setAlertMessage(null);
         }, 3000); // 3 seconds in milliseconds
@@ -100,7 +88,7 @@ const PhysioView = ({ physioId, username }) => {
           day: selectedDay,
           time,
           physioId,
-          username: "physio@example.com", // Add other details as needed
+          username: "physio@example.com",
           lockedBy: "physioview",
           __v: 0,
         });
@@ -247,28 +235,16 @@ const PhysioView = ({ physioId, username }) => {
       );
     }
 
-    // ...
-
     const handleAvailabilitySelectionWithTimeout = (time) => {
       const isSelected = handleAvailabilitySelection(time);
       if (isSelected) {
         setDisableTimeSlots(true);
-        // Clear the disableTimeSlots flag after 3 seconds
         setTimeout(() => {
           setDisableTimeSlots(false);
         }, 3000);
-
-        // // Set the alert message
-        // setAlertMessage("The time slot is already selected");
-
-        // // Clear the alert message after 3 seconds
-        // setTimeout(() => {
-        //   setAlertMessage(null);
-        // }, 3000);
       }
     };
 
-    // ...
     return (
       <Paper sx={{ p: 2, mt: 2 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
@@ -293,9 +269,7 @@ const PhysioView = ({ physioId, username }) => {
                   padding: "10px",
                   margin: "5px",
                   border: timeSlot.available ? "1px solid #45aaf2" : "none",
-                  // Adjusted styles to avoid the warning
                   borderColor: timeSlot.available ? "#45aaf2" : "none",
-                  // Add inline hover styles for the hovered time slot
                   ...(timeSlot.available &&
                     index === hoveredIndex && {
                       backgroundColor: "#45aaf2",
@@ -346,12 +320,10 @@ const PhysioView = ({ physioId, username }) => {
 
   const saveSlotsToDatabase = async (requestData) => {
     try {
-      // Replace this with your logic for saving slots to the database
       console.log("Saving slots to the database:", requestData);
 
-      // Example: Use fetch to send a POST request to the database endpoint
       const response = await fetch(
-        "http://localhost:3001/physioview/choosetimeslot",
+        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -363,7 +335,6 @@ const PhysioView = ({ physioId, username }) => {
 
       const responseData = await response.json();
 
-      // Log the response for debugging
       console.log("Database response:", responseData);
 
       if (response.ok) {
@@ -383,7 +354,7 @@ const PhysioView = ({ physioId, username }) => {
   };
 
   const handleConfirmSlots = async () => {
-    let requestData; // Declare requestData outside the try block
+    let requestData;
 
     try {
       requestData = {
@@ -398,7 +369,7 @@ const PhysioView = ({ physioId, username }) => {
       console.log("Request Data:", requestData);
 
       const response = await fetch(
-        "http://localhost:3001/physioview/choosetimeslot",
+        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -410,7 +381,6 @@ const PhysioView = ({ physioId, username }) => {
 
       const responseData = await response.json();
 
-      // Log the response for debugging
       console.log("Server response:", responseData);
 
       if (response.ok) {
@@ -418,24 +388,14 @@ const PhysioView = ({ physioId, username }) => {
       } else {
         console.error("Error confirming slots:", responseData.error);
 
-        // Display a user-friendly error message if needed
-        // alert(`Error: ${responseData.error}`);
-
-        // Proceed to save slots to the database even if there is an error
         saveSlotsToDatabase(requestData);
       }
     } catch (error) {
       console.error("Error confirming slots:", error);
 
-      // Display a generic error message if needed
-      // alert("An error occurred while confirming slots. Please try again.");
-
-      // Proceed to save slots to the database even if there is an error
       saveSlotsToDatabase(requestData);
     }
   };
-
-  // Rest of the code...
 
   const renderModal = () => {
     if (!showModal) {
@@ -522,9 +482,8 @@ const PhysioView = ({ physioId, username }) => {
   };
   const handlePreviousSlotsModalOpen = async () => {
     try {
-      // Fetch previously selected time slots from the database
       const response = await fetch(
-        `http://localhost:3001/physioview/useravailability?physioId=${physioId}&username=${username}`
+        `https://slottheschedule.onrender.com/physioview/useravailability?physioId=${physioId}&username=${username}`
       );
       const userAvailability = await response.json();
       setPreviousSlots(userAvailability);
@@ -548,6 +507,8 @@ const PhysioView = ({ physioId, username }) => {
     }, {});
 
     const uniqueTimes = [...new Set(previousSlots.map((slot) => slot.time))];
+
+    uniqueTimes.sort((a, b) => moment(a, "h:mm A").diff(moment(b, "h:mm A")));
 
     return (
       <Modal
@@ -608,8 +569,6 @@ const PhysioView = ({ physioId, username }) => {
       </Modal>
     );
   };
-
-  // ...
 
   return (
     <div className="physio-view">

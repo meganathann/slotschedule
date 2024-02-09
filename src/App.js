@@ -4,7 +4,7 @@ import PatientView from "./components/Patientview";
 import SalesView from "./components/Salesview";
 import Login from "./components/Login";
 import Button from "@mui/material/Button";
-import "./components/main.css"; // Uncomment if you have styles in main.css
+import "./components/main.css";
 
 function App() {
   const [user, setUser] = useState(null);

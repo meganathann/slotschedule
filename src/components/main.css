@@ -1,59 +1,49 @@
-main.css
-
-/* Define your primary and secondary colors */
 :root {
-  --primary-color: #ffffff; /* White */
-  --secondary-color: #f6f6f6; /* Light Gray */
+  --primary-color: #ffffff;
+  --secondary-color: #f6f6f6;
 }
 
-/* Global styles */
 body {
   font-family: "Arial", sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #ececec; /* Background color for the entire body */
+  background-color: #ececec;
 }
 
-/* Container styles */
 .physio-view,
 .sales-view {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #fff; /* Background color for the content container */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a subtle lift */
-  border-radius: 8px; /* Rounded corners for a softer look */
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
 }
 
-/* Heading styles */
 h1,
 h2,
 h3 {
   color: var(--primary-color);
 }
 
-/* Button styles */
 button {
   border: none;
   padding: 10px;
   margin: 5px;
   cursor: pointer;
   font-size: 14px;
-  border-radius: 4px; /* Rounded corners for buttons */
+  border-radius: 4px;
 }
 
-/* Primary button styles */
 .primary-button {
   background-color: var(--primary-color);
   color: #fff;
 }
 
-/* Secondary button styles */
 .secondary-button {
   background-color: var(--secondary-color);
   color: #fff;
 }
-/* main.css */ /* main.css */
 
 .hoverable:hover {
   background-color: #61dafb;
@@ -63,13 +53,12 @@ button {
 }
 
 .time-slot:hover {
-  background-color: #61dafb; /* Change the background color on hover */
-  color: #fff; /* Change the text color on hover */
-  border-color: #61dafb; /* Change the border color on hover */
-  cursor: pointer; /* Change the cursor to indicate it's clickable */
+  background-color: #61dafb;
+  color: #fff;
+  border-color: #61dafb;
+  cursor: pointer;
 }
 
-/* Optional: Style for selected time slots */
 .time-slot.selected {
   background-color: #45aaf2;
   color: #fff;
@@ -87,7 +76,6 @@ button {
   border-radius: 8px;
 }
 
-/* Modal styles */
 .Modal {
   display: none;
   position: fixed;
@@ -104,7 +92,6 @@ button {
   display: flex;
 }
 
-/* Table styles */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -131,18 +118,15 @@ th {
   color: #fff;
 }
 
-/* Table hover effect */
 table:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* PhysioView, PatientView, and SalesView */
-/*  */
 :root {
-  --primary-color: #f7f7f7; /* Light Gray */
-  --secondary-color: #eeeeee; /* Extra Light Gray */
-  --background-color: #393e46; /* Charcoal Gray */
-  --text-color: #929aab; /* Slate Gray */
+  --primary-color: #f7f7f7;
+  --secondary-color: #eeeeee;
+  --background-color: #393e46;
+  --text-color: #929aab;
   --selected-color: #45aaf2;
 }
 
@@ -213,10 +197,11 @@ button:hover {
     max-width: 100%;
   }
 }
+
 .login-container {
   max-width: 500px;
   padding: 30px;
-  background: #fff; /* Set the background color to white */
+  background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
