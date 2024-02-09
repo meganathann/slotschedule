@@ -35,7 +35,7 @@ const PhysioView = ({ physioId, username }) => {
     try {
       // Fetch existing locked time slots for the selected day
       const response = await fetch(
-        `https://slottheschedule.onrender.com/physioview/lockedtimeslots?physioId=${physioId}&username=${username}`
+        `http://localhost:3001/physioview/lockedtimeslots?physioId=${physioId}&username=${username}`
       );
       const lockedTimeSlots = await response.json();
 
@@ -351,7 +351,7 @@ const PhysioView = ({ physioId, username }) => {
 
       // Example: Use fetch to send a POST request to the database endpoint
       const response = await fetch(
-        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
+        "http://localhost:3001/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -398,7 +398,7 @@ const PhysioView = ({ physioId, username }) => {
       console.log("Request Data:", requestData);
 
       const response = await fetch(
-        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
+        "http://localhost:3001/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -524,7 +524,7 @@ const PhysioView = ({ physioId, username }) => {
     try {
       // Fetch previously selected time slots from the database
       const response = await fetch(
-        `https://slottheschedule.onrender.com/physioview/useravailability?physioId=${physioId}&username=${username}`
+        `http://localhost:3001/physioview/useravailability?physioId=${physioId}&username=${username}`
       );
       const userAvailability = await response.json();
       setPreviousSlots(userAvailability);

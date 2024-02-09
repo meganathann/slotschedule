@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-// import "./components/main.css";
 import PhysioView from "./components/PhysioView";
 import PatientView from "./components/Patientview";
 import SalesView from "./components/Salesview";
 import Login from "./components/Login";
 import Button from "@mui/material/Button";
+import "./components/main.css"; // Uncomment if you have styles in main.css
 
 function App() {
   const [user, setUser] = useState(null);
-  const [logoutHovered, setLogoutHovered] = useState(false);
 
   const users = {
     physio: {
@@ -32,43 +31,37 @@ function App() {
   };
 
   const handleLogin = (credentials) => {
-    const authenticatedUser = Object.values(users).find((u) => {
-      if (u && u.username && u.password) {
-        const lowercaseUsername = u.username.toLowerCase();
-        const lowercaseInputUsername = credentials.email.toLowerCase();
-
-        return (
-          lowercaseUsername === lowercaseInputUsername &&
-          u.password === credentials.password
-        );
-      }
-      return false;
-    });
+    const authenticatedUser = Object.values(users).find(
+      (u) =>
+        u &&
+        u.username &&
+        u.password &&
+        u.username.toLowerCase() === credentials.email.toLowerCase() &&
+        u.password === credentials.password
+    );
 
     if (authenticatedUser) {
       setUser(authenticatedUser);
     } else {
-      // Display alert for invalid credentials
       alert("Invalid credentials. Please try again.");
     }
   };
 
   const handleLogout = () => {
     setUser(null);
-    setLogoutHovered(false); // Reset hover state when logging out
   };
 
   return (
     <div className="App">
       {user ? (
         <>
-          {user.role === "physio" ? (
+          {user.role === "physio" && (
             <PhysioView username={user.username} physioId={user.id} />
-          ) : user.role === "sales" ? (
-            <SalesView username={user.username} />
-          ) : user.role === "patient" ? (
-            <PatientView username={user.username} />
-          ) : null}
+          )}
+          {user.role === "sales" && (
+            <SalesView username={user.username} users={users} />
+          )}
+          {user.role === "patient" && <PatientView username={user.username} />}
           <div className="logout-container">
             <Button
               onClick={handleLogout}
@@ -78,7 +71,7 @@ function App() {
                 backgroundColor: "#45aaf2",
                 color: "#fff",
                 "&:hover": {
-                  backgroundColor: "#61dafb", // Change the hover color as needed
+                  backgroundColor: "#61dafb",
                 },
               }}
             >

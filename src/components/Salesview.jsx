@@ -8,6 +8,8 @@ import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import { Button as MuiButton } from "@mui/material";
 
+// ... (imports)
+
 const CustomModal = ({
   selectedTimeSlot,
   setRemarks,
@@ -15,35 +17,6 @@ const CustomModal = ({
   handleAllotButtonClick,
   handleClose,
 }) => {
-  const calculateTimeRange = (selectedTime) => {
-    const ranges = [
-      { start: "5:00 AM", end: "8:00 AM" },
-      { start: "8:00 AM", end: "11:00 AM" },
-      { start: "11:00 AM", end: "2:00 PM" },
-      { start: "2:00 PM", end: "5:00 PM" },
-      { start: "5:00 PM", end: "8:00 PM" },
-      { start: "8:00 PM", end: "11:00 PM" },
-    ];
-
-    const range = ranges.find((r) => isTimeInRange(selectedTime, r));
-    return range ? `${range.start} - ${range.end}` : "Not in range";
-  };
-
-  const isTimeInRange = (selectedTime, range) => {
-    if (!range) {
-      return false;
-    }
-
-    const selectedMoment = moment(selectedTime, "hh:mm A");
-    const startMoment = moment(range.start, "hh:mm A");
-    const endMoment = moment(range.end, "hh:mm A");
-
-    return (
-      selectedMoment.isSameOrAfter(startMoment) &&
-      selectedMoment.isBefore(endMoment)
-    );
-  };
-
   return (
     <Modal
       open={Boolean(selectedTimeSlot)}
@@ -69,8 +42,9 @@ const CustomModal = ({
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           <p>{`Day: ${selectedTimeSlot.day}`}</p>
           <p>{`Time: ${selectedTimeSlot.time}`}</p>
-          <p>{`Physio: ${selectedTimeSlot.physioName}`}</p>
-
+          <p>{`Physio: ${
+            selectedTimeSlot.physioName || "physio@example.com"
+          }`}</p>
           {/* Remarks input */}
           <TextField
             label="Remarks"
@@ -100,40 +74,7 @@ const CustomModal = ({
   );
 };
 
-const SalesView = ({ username, physioId }) => {
-  const [physiosAvailability, setPhysiosAvailability] = useState([]);
-
-  const isTimeInRange = (selectedTime, range) => {
-    if (!range) {
-      return false;
-    }
-
-    const selectedMoment = moment(selectedTime, "hh:mm A");
-    const startMoment = moment(range.start, "hh:mm A");
-    const endMoment = moment(range.end, "hh:mm A");
-
-    return (
-      selectedMoment.isSameOrAfter(startMoment) &&
-      selectedMoment.isBefore(endMoment)
-    );
-  };
-  const renderModal = () => {
-    if (!selectedTimeSlot) {
-      return null;
-    }
-
-    return (
-      <CustomModal
-        selectedTimeSlot={selectedTimeSlot}
-        setRemarks={setRemarks}
-        remarks={remarks}
-        handleAllotButtonClick={handleAllotButtonClick}
-        handleClose={() => setSelectedTimeSlot(null)}
-        isTimeInRange={isTimeInRange}
-      />
-    );
-  };
-
+const SalesView = ({ username, users }) => {
   const ranges = [
     { start: "5:00 AM", end: "8:00 AM" },
     { start: "8:00 AM", end: "11:00 AM" },
@@ -147,88 +88,72 @@ const SalesView = ({ username, physioId }) => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [remarks, setRemarks] = useState("");
-  const [lockedTimeSlots, setLockedTimeSlots] = useState([]);
+  const [userAvailability, setUserAvailability] = useState([]);
 
-  // ...
+  useEffect(() => {
+    const fetchUserAvailability = async () => {
+      try {
+        console.log("Request parameters:", { physioId: 1, username });
+        const response = await fetch(
+          `http://localhost:3001/physioview/useravailability?physioId=1&username=physio@example.com`
+        );
 
-  // ...
-  const fetchPhysiosAvailability = async () => {
-    try {
-      const response = await fetch(
-        "http://localhost:3001/physioview/availabletimeslots"
-      );
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch user availability. Status: ${response.status}`
+          );
+        }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        const data = await response.json();
+        console.log("Fetched data:", data);
+        setUserAvailability(data);
+      } catch (error) {
+        console.error("Error fetching user availability:", error);
       }
+    };
 
-      const data = await response.json();
+    fetchUserAvailability();
+  }, [username]);
 
-      console.log("Data received from backend:", data);
+  const isTimeInRange = (selectedTime, range) => {
+    const selectedMoment = moment(selectedTime, "hh:mm A");
+    const startMoment = moment(range.start, "hh:mm A");
+    const endMoment = moment(range.end, "hh:mm A");
 
-      // Check if data is an array and has length
-      if (Array.isArray(data) && data.length > 0) {
-        setPhysiosAvailability(data);
-      } else {
-        console.log("Received data is not an array or is empty.");
-      }
-    } catch (error) {
-      console.error("Error fetching physios availability:", error.message);
-    }
+    return (
+      selectedMoment.isSameOrAfter(startMoment) &&
+      selectedMoment.isBefore(endMoment)
+    );
   };
-
-  // ...
-  // ...
-
-  const handleTimeSlotClick = (physio, time) => {
-    const slotTimeMoment = moment(time, "hh:mm A");
-
+  const handleTimeSlotClick = (availability, time) => {
+    console.log("Availability clicked:", availability);
+    console.log(
+      "Availability structure:",
+      JSON.stringify(availability, null, 2)
+    );
     setSelectedTimeSlot({
       day: selectedDay,
       time,
-      physioName: physio.physioName,
-      physioId: physio.physioId,
+      physioName: availability.username, // Make sure availability contains username
+      physioId: availability.physioId,
     });
   };
 
-  const handleAllotButtonClick = async () => {
+  const handleAllotButtonClick = () => {
     if (remarks.trim() === "") {
       alert("Please enter remarks before allotting the slot.");
       return;
     }
 
-    try {
-      // Send a request to lock time slots with remarks
-      const response = await fetch(
-        "http://localhost:3001/salesview/locktimeslot",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            physioId: selectedTimeSlot.physioId,
-            remarks: remarks,
-            day: selectedTimeSlot.day,
-            time: selectedTimeSlot.time,
-          }),
-        }
-      );
+    // Simulate backend interaction by logging data
+    console.log("Remarks:", remarks);
+    console.log("Selected Time Slot:", selectedTimeSlot);
 
-      const data = await response.json();
-      console.log("Response from server:", data);
-
-      // Update the state with the locked time slots
-      setLockedTimeSlots(data.lockedTimeSlots);
-
-      // Reset the state after successful locking
-      setSelectedTimeSlot(null);
-      setRemarks("");
-    } catch (error) {
-      console.error("Error locking time slots:", error);
-      // Handle error as needed
-    }
+    // Reset the state after simulated backend interaction
+    setSelectedTimeSlot(null);
+    setRemarks("");
   };
+
   const renderDayButtons = () => {
     const weekDays = [
       "Monday",
@@ -238,10 +163,9 @@ const SalesView = ({ username, physioId }) => {
       "Friday",
       "Saturday",
     ];
-    console.log("physiosAvailability:", physiosAvailability);
-    console.log("selectedDay:", selectedDay);
+
     return (
-      <div className="day-buttons">
+      <>
         {weekDays.map((day) => (
           <Button
             key={day}
@@ -252,7 +176,7 @@ const SalesView = ({ username, physioId }) => {
             {day}
           </Button>
         ))}
-      </div>
+      </>
     );
   };
 
@@ -261,33 +185,11 @@ const SalesView = ({ username, physioId }) => {
       return <p>Select a day and time range to see available time slots.</p>;
     }
 
-    const allPhysios = physiosAvailability;
-
-    const physiosForDay = allPhysios.filter((physio) =>
-      physio.weeklyAvailability.some(
-        (availability) => availability.day === selectedDay
-      )
-    );
-
-    if (!physiosForDay.length) {
-      return <p>No available time slots for the selected day.</p>;
-    }
-
-    const filteredTimeSlots = physiosForDay
-      .map((physio) => {
-        return physio.weeklyAvailability
-          .filter(
-            (av) =>
-              av.day === selectedDay &&
-              isTimeInRange(av.time, selectedTimeRange)
-          )
-          .map((av) => ({
-            physioId: physio.physioId,
-            physioName: physio.physioName,
-            time: av.time,
-          }));
-      })
-      .flat();
+    const filteredTimeSlots = userAvailability
+      .filter((availability) => availability.day === selectedDay)
+      .map((availability) => ({
+        time: availability.time,
+      }));
 
     return (
       <div className="time-slot-range">
@@ -297,7 +199,7 @@ const SalesView = ({ username, physioId }) => {
         {filteredTimeSlots.length > 0 ? (
           <Grid container spacing={2}>
             {filteredTimeSlots.map((av) => (
-              <Grid item key={`${av.physioId}-${av.time}`}>
+              <Grid item key={av.time}>
                 <MuiButton
                   variant="contained"
                   className={`time-slot ${
@@ -322,15 +224,34 @@ const SalesView = ({ username, physioId }) => {
       </div>
     );
   };
+
   const handleTimeRangeButtonClick = (range) => {
-    setSelectedTimeRange(isTimeRangeSelected(range) ? null : range);
+    setSelectedTimeRange(
+      selectedTimeRange && isTimeInRangeSelected(range) ? null : range
+    );
   };
 
-  const isTimeRangeSelected = (range) => {
+  const isTimeInRangeSelected = (range) => {
     return (
       selectedTimeRange &&
       selectedTimeRange.start === range.start &&
       selectedTimeRange.end === range.end
+    );
+  };
+
+  const renderModal = () => {
+    if (!selectedTimeSlot) {
+      return null;
+    }
+
+    return (
+      <CustomModal
+        selectedTimeSlot={selectedTimeSlot}
+        setRemarks={setRemarks}
+        remarks={remarks}
+        handleAllotButtonClick={handleAllotButtonClick}
+        handleClose={() => setSelectedTimeSlot(null)}
+      />
     );
   };
 
@@ -346,11 +267,13 @@ const SalesView = ({ username, physioId }) => {
           <Button
             key={index}
             className={
-              selectedTimeRange && isTimeRangeSelected(range) ? "selected" : ""
+              selectedTimeRange && isTimeInRangeSelected(range)
+                ? "selected"
+                : ""
             }
             onClick={() => handleTimeRangeButtonClick(range)}
             variant={
-              selectedTimeRange && isTimeRangeSelected(range)
+              selectedTimeRange && isTimeInRangeSelected(range)
                 ? "contained"
                 : "outlined"
             }
@@ -361,7 +284,7 @@ const SalesView = ({ username, physioId }) => {
         ))}
       </div>
       {renderTimeSlotsForDay()}
-      {renderModal()} {/* Ensure renderModal is called here */}
+      {renderModal()}
     </Box>
   );
 };
