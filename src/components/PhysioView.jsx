@@ -292,11 +292,13 @@ const PhysioView = ({ physioId, username }) => {
                   borderRadius: "4px",
                   padding: "10px",
                   margin: "5px",
-                  border: timeSlot.available ? "1px solid #000" : "none",
+                  border: timeSlot.available ? "1px solid #45aaf2" : "none",
+                  // Adjusted styles to avoid the warning
+                  borderColor: timeSlot.available ? "#45aaf2" : "none",
                   // Add inline hover styles for the hovered time slot
                   ...(timeSlot.available &&
                     index === hoveredIndex && {
-                      backgroundColor: "#61dafb",
+                      backgroundColor: "#45aaf2",
                       color: "#fff",
                       borderColor: "#61dafb",
                       cursor: "pointer",
@@ -611,11 +613,16 @@ const PhysioView = ({ physioId, username }) => {
 
   return (
     <div className="physio-view">
-      <Typography variant="h5" gutterBottom>
+      <Box
+        sx={{ border: "1px solid #ccc", padding: "10px", marginBottom: "15px" }}
+      >
+        <Typography variant="h5" gutterBottom sx={{ color: "#333" }}>
+          PhysioView
+        </Typography>
+      </Box>
+
+      <Typography variant="h4" gutterBottom sx={{ color: "#007bff" }}>
         Welcome, {username}!
-      </Typography>
-      <Typography variant="h4" gutterBottom>
-        PhysioView
       </Typography>
       <Typography>Select a day:</Typography>
       <Grid container spacing={1} className="day-buttons">
@@ -628,7 +635,6 @@ const PhysioView = ({ physioId, username }) => {
         View Previous Slots
       </Button>
       {renderPreviousSlotsModal()}
-
       <div className="weekly-availability">
         {renderTimeSlotsForDay()}
         {selectedRange && (
