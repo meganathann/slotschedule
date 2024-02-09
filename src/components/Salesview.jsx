@@ -104,7 +104,6 @@ const SalesView = ({ username, users }) => {
         }
 
         const data = await response.json();
-        console.log("Fetched data:", data);
         setUserAvailability(data);
       } catch (error) {
         console.error("Error fetching user availability:", error);
@@ -125,11 +124,6 @@ const SalesView = ({ username, users }) => {
     );
   };
   const handleTimeSlotClick = (availability, time) => {
-    console.log("Availability clicked:", availability);
-    console.log(
-      "Availability structure:",
-      JSON.stringify(availability, null, 2)
-    );
     setSelectedTimeSlot({
       day: selectedDay,
       time,

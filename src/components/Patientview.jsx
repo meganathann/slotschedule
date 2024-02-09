@@ -25,7 +25,6 @@ const PatientView = ({ username }) => {
         }
 
         const data = await response.json();
-        console.log("Fetched physio availability:", data);
         setUserAvailability(data);
       } catch (error) {
         console.error("Error fetching physio availability:", error.message);
@@ -44,7 +43,6 @@ const PatientView = ({ username }) => {
 
   const renderTimeSlotsForDay = () => {
     if (!selectedDay || !selectedTimeRange) {
-      console.log("Select a day and time range to see available time slots.");
       return <p>Select a day and time range to see available time slots.</p>;
     }
 

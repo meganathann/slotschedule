@@ -37,7 +37,7 @@ const PhysioView = ({ physioId, username }) => {
         `https://slottheschedule.onrender.com/physioview/lockedtimeslots?physioId=${physioId}&username=${username}`
       );
     } catch (error) {
-      console.error("Error fetching locked time slots:", error);
+      // console.error("Error fetching locked time slots:", error);
     }
   };
 
@@ -204,7 +204,7 @@ const PhysioView = ({ physioId, username }) => {
 
   const filterTimeRange = (start, end) => {
     if (!selectedDay) {
-      console.error("Select a day first.");
+      // console.error("Select a day first.");
       return;
     }
 
@@ -320,8 +320,6 @@ const PhysioView = ({ physioId, username }) => {
 
   const saveSlotsToDatabase = async (requestData) => {
     try {
-      console.log("Saving slots to the database:", requestData);
-
       const response = await fetch(
         "https://slottheschedule.onrender.com/physioview/choosetimeslot",
         {
@@ -335,16 +333,12 @@ const PhysioView = ({ physioId, username }) => {
 
       const responseData = await response.json();
 
-      console.log("Database response:", responseData);
-
       if (response.ok) {
-        console.log("Slots saved to the database successfully!");
         setConfirmationMessage("Slots saved to the database successfully!");
       } else {
-        console.error(
-          "Error saving slots to the database:",
-          responseData.error
-        );
+        // console.error(
+        // "Error saving slots to the database:",
+
         setConfirmationMessage("Error saving slots to the database");
       }
     } catch (error) {
@@ -366,8 +360,6 @@ const PhysioView = ({ physioId, username }) => {
         })),
       };
 
-      console.log("Request Data:", requestData);
-
       const response = await fetch(
         "https://slottheschedule.onrender.com/physioview/choosetimeslot",
         {
@@ -380,8 +372,6 @@ const PhysioView = ({ physioId, username }) => {
       );
 
       const responseData = await response.json();
-
-      console.log("Server response:", responseData);
 
       if (response.ok) {
         setConfirmationMessage("Slots confirmed and saved successfully!");
@@ -489,7 +479,7 @@ const PhysioView = ({ physioId, username }) => {
       setPreviousSlots(userAvailability);
       setPreviousSlotsModalOpen(true);
     } catch (error) {
-      console.error("Error fetching previous time slots:", error);
+      // console.error("Error fetching previous time slots:", error);
     }
   };
 
