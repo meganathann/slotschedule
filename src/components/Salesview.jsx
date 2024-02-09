@@ -101,68 +101,8 @@ const CustomModal = ({
 };
 
 const SalesView = ({ username, physioId }) => {
-  const [physiosAvailability, setPhysiosAvailability] = useState([
-    {
-      _id: {
-        $oid: "65be9613d22e8c231fbde27b",
-      },
-      physioId: "1",
-      physioName: "John Doe",
-      weeklyAvailability: [
-        {
-          day: "Monday",
-          time: "10:00 AM",
-        },
-        {
-          day: "Monday",
-          time: "10:45 AM",
-        },
-        {
-          day: "Tuesday",
-          time: "11:30 AM",
-        },
-        {
-          day: "Wednesday",
-          time: "02:00 PM",
-        },
-        {
-          day: "Wednesday",
-          time: "03:15 PM",
-        },
-      ],
-      __v: 0,
-    },
-    {
-      _id: {
-        $oid: "65be9613d22e8c231fbde27c",
-      },
-      physioId: "2",
-      physioName: "Jane Smith",
-      weeklyAvailability: [
-        {
-          day: "Monday",
-          time: "09:30 AM",
-        },
-        {
-          day: "Tuesday",
-          time: "02:45 PM",
-        },
-        {
-          day: "Wednesday",
-          time: "01:00 PM",
-        },
-        {
-          day: "Thursday",
-          time: "11:30 AM",
-        },
-        {
-          day: "Friday",
-          time: "03:30 PM",
-        },
-      ],
-      __v: 0,
-    },
-  ]);
+  const [physiosAvailability, setPhysiosAvailability] = useState([]);
+
   const isTimeInRange = (selectedTime, range) => {
     if (!range) {
       return false;
@@ -211,31 +151,38 @@ const SalesView = ({ username, physioId }) => {
 
   // ...
 
-  useEffect(() => {
-    const fetchPhysiosAvailability = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3001/physioview/availabletimeslots"
-          // Updated endpoint to the correct one
-        );
+  // ...
+  const fetchPhysiosAvailability = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3001/physioview/availabletimeslots"
+      );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setPhysiosAvailability(data);
-      } catch (error) {
-        console.error("Error fetching physios availability:", error.message);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    };
 
-    fetchPhysiosAvailability();
-  }, []);
+      const data = await response.json();
 
+      console.log("Data received from backend:", data);
+
+      // Check if data is an array and has length
+      if (Array.isArray(data) && data.length > 0) {
+        setPhysiosAvailability(data);
+      } else {
+        console.log("Received data is not an array or is empty.");
+      }
+    } catch (error) {
+      console.error("Error fetching physios availability:", error.message);
+    }
+  };
+
+  // ...
   // ...
 
   const handleTimeSlotClick = (physio, time) => {
+    const slotTimeMoment = moment(time, "hh:mm A");
+
     setSelectedTimeSlot({
       day: selectedDay,
       time,
@@ -262,6 +209,8 @@ const SalesView = ({ username, physioId }) => {
           body: JSON.stringify({
             physioId: selectedTimeSlot.physioId,
             remarks: remarks,
+            day: selectedTimeSlot.day,
+            time: selectedTimeSlot.time,
           }),
         }
       );
@@ -280,7 +229,6 @@ const SalesView = ({ username, physioId }) => {
       // Handle error as needed
     }
   };
-
   const renderDayButtons = () => {
     const weekDays = [
       "Monday",
@@ -290,7 +238,8 @@ const SalesView = ({ username, physioId }) => {
       "Friday",
       "Saturday",
     ];
-
+    console.log("physiosAvailability:", physiosAvailability);
+    console.log("selectedDay:", selectedDay);
     return (
       <div className="day-buttons">
         {weekDays.map((day) => (

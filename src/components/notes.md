@@ -14,43 +14,24 @@ import Box from "@mui/material/Box";
 import { Button as MuiButton } from "@mui/material";
 
 const PhysioView = ({ physioId, username }) => {
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [weeklyAvailability, setWeeklyAvailability] = useState([]);
+const [selectedDay, setSelectedDay] = useState(null);
+const [weeklyAvailability, setWeeklyAvailability] = useState([]);
 
-  const [disableTimeSlots, setDisableTimeSlots] = useState(false);
-  const [selectedRange, setSelectedRange] = useState(null);
-  const [selectedTimeRange, setSelectedTimeRange] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState(null);
-  const [alertMessage, setAlertMessage] = useState(null);
-  const [previousSlotsModalOpen, setPreviousSlotsModalOpen] = useState(false);
-  const [previousSlots, setPreviousSlots] = useState([]);
+const [disableTimeSlots, setDisableTimeSlots] = useState(false);
+const [selectedRange, setSelectedRange] = useState(null);
+const [selectedTimeRange, setSelectedTimeRange] = useState(null);
+const [showModal, setShowModal] = useState(false);
+const [confirmationMessage, setConfirmationMessage] = useState(null);
+const [alertMessage, setAlertMessage] = useState(null);
 
-  const handleDaySelection = async (day) => {
-    setSelectedDay(day);
-    setDisableTimeSlots(false);
+const handleDaySelection = (day) => {
+setSelectedDay(day);
+setDisableTimeSlots(false);
+};
 
-    try {
-      // Fetch existing locked time slots for the selected day
-      const response = await fetch(
-        `https://slottheschedule.onrender.com/physioview/lockedtimeslots?physioId=${physioId}&username=${username}`
-      );
-      const lockedTimeSlots = await response.json();
-
-      // Check if there are any locked time slots for the selected day
-      if (lockedTimeSlots.length > 0) {
-        // setAlertMessage(
-        //   "Warning: You already have selected time slots for this day."
-        // );
-      }
-    } catch (error) {
-      console.error("Error fetching locked time slots:", error);
-    }
-  };
-
-  const handleAvailabilitySelection = (time) => {
-    const selectedDateTime = moment(`${selectedDay} ${time}`, "dddd h:mm A");
-    const endTime = selectedDateTime.clone().add(45, "minutes");
+const handleAvailabilitySelection = (time) => {
+const selectedDateTime = moment(`${selectedDay} ${time}`, "dddd h:mm A");
+const endTime = selectedDateTime.clone().add(45, "minutes");
 
     const isOverlapping = weeklyAvailability.some((slot) => {
       const slotStartTime = moment(`${slot.day} ${slot.time}`, "dddd h:mm A");
@@ -66,22 +47,19 @@ const PhysioView = ({ physioId, username }) => {
       );
     });
 
-    // Set the alert only if there is an overlap
     if (isOverlapping) {
-      // Check if the alert is already set in the other location
-      if (!alertMessage) {
-        setAlertMessage(
-          "Time slot cannot be selected within 45 minutes of another slot."
-        );
+      setAlertMessage(
+        "Time slot cannot be selected within 45 minutes of another slot."
+      );
 
-        // Clear the alert message after 3 to 5 seconds
-        setTimeout(() => {
-          setAlertMessage(null);
-        }, 3000); // 3 seconds in milliseconds
-      }
+      // Clear the alert message after 3 to 5 seconds
+      setTimeout(() => {
+        setAlertMessage(null);
+      }, 3000); // 3 seconds in milliseconds
 
       return;
     }
+
     setWeeklyAvailability((prevAvailability) => {
       const updatedAvailability = [...prevAvailability];
       const existingSlotIndex = updatedAvailability.findIndex(
@@ -111,12 +89,13 @@ const PhysioView = ({ physioId, username }) => {
     setTimeout(() => {
       setDisableTimeSlots(false);
     }, 2700000); // 45 minutes in milliseconds
-  };
 
-  const generateTimeSlotsForDay = (day, start, end) => {
-    const startTime = moment(start, "h:mm A");
-    const endTime = moment(end, "h:mm A");
-    const timeSlots = [];
+};
+
+const generateTimeSlotsForDay = (day, start, end) => {
+const startTime = moment(start, "h:mm A");
+const endTime = moment(end, "h:mm A");
+const timeSlots = [];
 
     let currentTime = moment(startTime);
 
@@ -152,17 +131,18 @@ const PhysioView = ({ physioId, username }) => {
     }
 
     return timeSlots;
-  };
 
-  const renderDayButtons = () => {
-    const weekDays = [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
+};
+
+const renderDayButtons = () => {
+const weekDays = [
+"Monday",
+"Tuesday",
+"Wednesday",
+"Thursday",
+"Friday",
+"Saturday",
+];
 
     return weekDays.map((day) => (
       <Button
@@ -174,12 +154,13 @@ const PhysioView = ({ physioId, username }) => {
         {day}
       </Button>
     ));
-  };
 
-  const renderTimeRangeFilters = () => {
-    if (!selectedDay) {
-      return null;
-    }
+};
+
+const renderTimeRangeFilters = () => {
+if (!selectedDay) {
+return null;
+}
 
     const ranges = [
       { start: "5:00 AM", end: "8:00 AM" },
@@ -210,26 +191,28 @@ const PhysioView = ({ physioId, username }) => {
         ))}
       </div>
     );
-  };
 
-  const filterTimeRange = (start, end) => {
-    if (!selectedDay) {
-      console.error("Select a day first.");
-      return;
-    }
+};
+
+const filterTimeRange = (start, end) => {
+if (!selectedDay) {
+console.error("Select a day first.");
+return;
+}
 
     setSelectedRange({ start, end });
     setSelectedTimeRange({ start, end });
-  };
 
-  const renderTimeSlotsForDay = () => {
-    if (!selectedDay || !selectedRange) {
-      return (
-        <Typography>
-          Select a day and range to see available time slots.
-        </Typography>
-      );
-    }
+};
+
+const renderTimeSlotsForDay = () => {
+if (!selectedDay || !selectedRange) {
+return (
+<Typography>
+Select a day and range to see available time slots.
+</Typography>
+);
+}
 
     const timeSlots = generateTimeSlotsForDay(
       selectedDay,
@@ -244,30 +227,6 @@ const PhysioView = ({ physioId, username }) => {
         </Typography>
       );
     }
-
-    // ...
-
-    const handleAvailabilitySelectionWithTimeout = (time) => {
-      const isSelected = handleAvailabilitySelection(time);
-      if (isSelected) {
-        setDisableTimeSlots(true);
-        // Clear the disableTimeSlots flag after 3 seconds
-        setTimeout(() => {
-          setDisableTimeSlots(false);
-        }, 3000);
-
-        // // Set the alert message
-        // setAlertMessage("The time slot is already selected");
-
-        // // Clear the alert message after 3 seconds
-        // setTimeout(() => {
-        //   setAlertMessage(null);
-        // }, 3000);
-      }
-    };
-
-    // ...
-
     return (
       <Paper sx={{ p: 2, mt: 2 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
@@ -278,54 +237,41 @@ const PhysioView = ({ physioId, username }) => {
             <Grid item key={`${selectedDay}-${timeSlot.time}`}>
               <Button
                 className={`time-slot ${timeSlot.selected ? "selected" : ""}`}
-                onClick={() =>
-                  handleAvailabilitySelectionWithTimeout(timeSlot.time)
-                }
+                onClick={() => handleAvailabilitySelection(timeSlot.time)}
                 style={{
                   backgroundColor: timeSlot.available
                     ? timeSlot.selected
-                      ? "#45aaf2"
+                      ? "#3498db" // Blue color for selected time slots
                       : "var(--primary-color)"
                     : "#f1f1f1",
                   cursor: timeSlot.available ? "pointer" : "not-allowed",
-                  color: timeSlot.selected ? "#fff" : "#45aaf2",
-                  borderRadius: "4px",
-                  padding: "10px",
-                  margin: "5px",
-                  border: timeSlot.available ? "1px solid #000" : "none",
+                  color: timeSlot.selected ? "#fff" : "#000", // Text color for selected time slots
+                  borderRadius: "4px", // Rounded corners
+                  padding: "10px", // Adjust padding as needed
+                  margin: "5px", // Adjust margin as needed
+                  border: timeSlot.available ? "1px solid #000" : "none", // Border for outlined slots
                 }}
                 variant={
                   timeSlot.available && timeSlot.selected
                     ? "contained"
-                    : timeSlot.available
-                    ? "outlined"
-                    : "disabled"
+                    : "outlined"
                 }
-                disabled={previousSlots.some(
-                  (slot) =>
-                    slot.day === selectedDay && slot.time === timeSlot.time
-                )}
               >
                 {timeSlot.time}
               </Button>
             </Grid>
           ))}
         </Grid>
-        {/* {disableTimeSlots && (
-          <Typography color="error" sx={{ mt: 2 }}>
-            The time slot is already selected
-          </Typography>
-        )} */}
       </Paper>
     );
-  };
 
-  const renderTimeSlotsForWeek = () => {
-    if (!selectedRange) {
-      return (
-        <Typography>Select a range to see available time slots.</Typography>
-      );
-    }
+};
+const renderTimeSlotsForWeek = () => {
+if (!selectedRange) {
+return (
+<Typography>Select a range to see available time slots.</Typography>
+);
+}
 
     return (
       <Box sx={{ mt: 2 }}>
@@ -334,16 +280,17 @@ const PhysioView = ({ physioId, username }) => {
         </Button>
       </Box>
     );
-  };
 
-  const saveSlotsToDatabase = async (requestData) => {
-    try {
-      // Replace this with your logic for saving slots to the database
-      console.log("Saving slots to the database:", requestData);
+};
+
+const saveSlotsToDatabase = async (requestData) => {
+try {
+// Replace this with your logic for saving slots to the database
+console.log("Saving slots to the database:", requestData);
 
       // Example: Use fetch to send a POST request to the database endpoint
       const response = await fetch(
-        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
+        "http://localhost:3001/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -372,10 +319,11 @@ const PhysioView = ({ physioId, username }) => {
       console.error("Error saving slots to the database:", error);
       setConfirmationMessage("Error saving slots to the database");
     }
-  };
 
-  const handleConfirmSlots = async () => {
-    let requestData; // Declare requestData outside the try block
+};
+
+const handleConfirmSlots = async () => {
+let requestData; // Declare requestData outside the try block
 
     try {
       requestData = {
@@ -390,7 +338,7 @@ const PhysioView = ({ physioId, username }) => {
       console.log("Request Data:", requestData);
 
       const response = await fetch(
-        "https://slottheschedule.onrender.com/physioview/choosetimeslot",
+        "http://localhost:3001/physioview/choosetimeslot",
         {
           method: "POST",
           headers: {
@@ -425,14 +373,15 @@ const PhysioView = ({ physioId, username }) => {
       // Proceed to save slots to the database even if there is an error
       saveSlotsToDatabase(requestData);
     }
-  };
 
-  // Rest of the code...
+};
 
-  const renderModal = () => {
-    if (!showModal) {
-      return null;
-    }
+// Rest of the code...
+
+const renderModal = () => {
+if (!showModal) {
+return null;
+}
 
     const slotsByDayAndTime = weeklyAvailability.reduce(
       (acc, { day, time }) => {
@@ -511,136 +460,44 @@ const PhysioView = ({ physioId, username }) => {
         </Box>
       </Modal>
     );
-  };
-  const handlePreviousSlotsModalOpen = async () => {
-    try {
-      // Fetch previously selected time slots from the database
-      const response = await fetch(
-        `https://slottheschedule.onrender.com/physioview/useravailability?physioId=${physioId}&username=${username}`
-      );
-      const userAvailability = await response.json();
-      setPreviousSlots(userAvailability);
-      setPreviousSlotsModalOpen(true);
-    } catch (error) {
-      console.error("Error fetching previous time slots:", error);
-    }
-  };
 
-  const handlePreviousSlotsModalClose = () => {
-    setPreviousSlotsModalOpen(false);
-  };
+};
 
-  const renderPreviousSlotsModal = () => {
-    const slotsByDayAndTime = previousSlots.reduce((acc, { day, time }) => {
-      if (!acc[day]) {
-        acc[day] = {};
-      }
-      acc[day][time] = true;
-      return acc;
-    }, {});
+// ...
 
-    const uniqueTimes = [...new Set(previousSlots.map((slot) => slot.time))];
-
-    return (
-      <Modal
-        open={previousSlotsModalOpen}
-        onClose={handlePreviousSlotsModalClose}
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-          }}
-        >
-          <Paper sx={{ p: 4 }}>
-            <Typography variant="h4" gutterBottom>
-              Previously Selected Slots
-            </Typography>
-            {previousSlots.length === 0 ? (
-              <Typography>No previous time slots selected.</Typography>
-            ) : (
-              <>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Time</TableCell>
-                      {uniqueTimes.map((time) => (
-                        <TableCell key={time} align="center">
-                          {time}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {Object.keys(slotsByDayAndTime).map((day) => (
-                      <TableRow key={day}>
-                        <TableCell>{day}</TableCell>
-                        {uniqueTimes.map((time) => (
-                          <TableCell key={`${day}-${time}`} align="center">
-                            {slotsByDayAndTime[day][time] ? "X" : ""}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                <Button
-                  onClick={handlePreviousSlotsModalClose}
-                  variant="outlined"
-                  sx={{ mt: 2 }}
-                >
-                  Close
-                </Button>
-              </>
-            )}
-          </Paper>
-        </Box>
-      </Modal>
-    );
-  };
-
-  // ...
-
-  return (
-    <div className="physio-view">
-      <Typography variant="h5" gutterBottom>
-        Welcome, {username}!
-      </Typography>
-      <Typography variant="h4" gutterBottom>
-        PhysioView
-      </Typography>
-      <Typography>Select a day:</Typography>
-      <Grid container spacing={1} className="day-buttons">
-        {renderDayButtons()}
-      </Grid>
-      <Typography>Select a range:</Typography>
-      {renderTimeRangeFilters()}
-      <Typography>Available time slots:</Typography>
-      <Button onClick={handlePreviousSlotsModalOpen} variant="contained">
-        View Previous Slots
-      </Button>
-      {renderPreviousSlotsModal()}
-
-      <div className="weekly-availability">
-        {renderTimeSlotsForDay()}
-        {selectedRange && (
-          <Box sx={{ mt: 2 }}>
-            <Button onClick={() => setShowModal(true)} variant="contained">
-              Next
-            </Button>
-          </Box>
-        )}
-        {renderModal()}
-      </div>
-      {alertMessage && (
-        <div className="alert">
-          <Typography color="error">{alertMessage}</Typography>
-        </div>
-      )}
-    </div>
-  );
+return (
+<div className="physio-view">
+<Typography variant="h5" gutterBottom>
+Welcome, {username}!
+</Typography>
+<Typography variant="h4" gutterBottom>
+PhysioView
+</Typography>
+<Typography>Select a day:</Typography>
+<Grid container spacing={1} className="day-buttons">
+{renderDayButtons()}
+</Grid>
+<Typography>Select a range:</Typography>
+{renderTimeRangeFilters()}
+<Typography>Available time slots:</Typography>
+<div className="weekly-availability">
+{renderTimeSlotsForDay()}
+{selectedRange && (
+<Box sx={{ mt: 2 }}>
+<Button onClick={() => setShowModal(true)} variant="contained">
+Next
+</Button>
+</Box>
+)}
+{renderModal()}
+</div>
+{alertMessage && (
+<div className="alert">
+<Typography color="error">{alertMessage}</Typography>
+</div>
+)}
+</div>
+);
 };
 
 export default PhysioView;
