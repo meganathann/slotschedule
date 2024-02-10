@@ -247,6 +247,15 @@ const PhysioView = ({ physioId, username }) => {
 
     return (
       <Paper sx={{ p: 2, mt: 2 }}>
+        <Box sx={{ mb: 2 }}>
+          <Button
+            onClick={handlePreviousSlotsModalOpen}
+            variant="contained"
+            sx={{ mb: 2 }}
+          >
+            Show Previously Selected Slots
+          </Button>
+        </Box>
         <Typography variant="h6" sx={{ mb: 2 }}>
           {selectedDay}'s Available Time Slots
         </Typography>
@@ -302,6 +311,7 @@ const PhysioView = ({ physioId, username }) => {
       </Paper>
     );
   };
+
   const renderTimeSlotsForWeek = () => {
     if (!selectedRange) {
       return (
@@ -311,7 +321,11 @@ const PhysioView = ({ physioId, username }) => {
 
     return (
       <Box sx={{ mt: 2 }}>
-        <Button onClick={() => setShowModal(true)} variant="contained">
+        <Button
+          onClick={() => setShowModal(true)}
+          variant="contained"
+          sx={{ mr: 2 }}
+        >
           Next
         </Button>
       </Box>
