@@ -561,16 +561,30 @@ const PhysioView = ({ physioId, username }) => {
   };
 
   return (
-    <div className="physio-view">
-      <Box
-        sx={{ border: "1px solid #ccc", padding: "10px", marginBottom: "15px" }}
+    <Box
+      className="physio-view"
+      sx={{
+        border: "1px solid #ccc",
+        padding: "20px",
+        marginBottom: "15px",
+        maxWidth: "800px",
+        margin: "auto",
+        backgroundColor: "#f9f9f9", // Updated background color
+      }}
+    >
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{ color: "#007bff", fontWeight: 700, fontSize: "2.5rem" }}
       >
-        <Typography variant="h5" gutterBottom sx={{ color: "#333" }}>
-          PhysioView
-        </Typography>
-      </Box>
+        PhysioView
+      </Typography>
 
-      <Typography variant="h4" gutterBottom sx={{ color: "#007bff" }}>
+      <Typography
+        variant="h5"
+        gutterBottom
+        sx={{ color: "#007bff", fontSize: "2rem", marginBottom: "10px" }}
+      >
         Welcome, {username}!
       </Typography>
       <Typography>Select a day:</Typography>
@@ -579,28 +593,16 @@ const PhysioView = ({ physioId, username }) => {
       </Grid>
       <Typography>Select a range:</Typography>
       {renderTimeRangeFilters()}
-      <Typography>Available time slots:</Typography>
-      <Button onClick={handlePreviousSlotsModalOpen} variant="contained">
-        View Previous Slots
-      </Button>
-      {renderPreviousSlotsModal()}
-      <div className="weekly-availability">
-        {renderTimeSlotsForDay()}
-        {selectedRange && (
-          <Box sx={{ mt: 2 }}>
-            <Button onClick={() => setShowModal(true)} variant="contained">
-              Next
-            </Button>
-          </Box>
-        )}
-        {renderModal()}
-      </div>
+      <Box sx={{ mt: 2 }}>{renderTimeSlotsForDay()}</Box>
+      <Box sx={{ mt: 2 }}>{renderTimeSlotsForWeek()}</Box>
       {alertMessage && (
-        <div className="alert">
-          <Typography color="error">{alertMessage}</Typography>
-        </div>
+        <Typography variant="body2" sx={{ mt: 2, color: "red" }}>
+          {alertMessage}
+        </Typography>
       )}
-    </div>
+      {renderModal()}
+      {renderPreviousSlotsModal()}
+    </Box>
   );
 };
 

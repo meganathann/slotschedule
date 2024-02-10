@@ -71,8 +71,10 @@ function App() {
                 backgroundColor: "#45aaf2",
                 color: "#fff",
                 "&:hover": {
-                  backgroundColor: "#61dafb",
+                  backgroundColor: "#007bff",
                 },
+                borderRadius: "8px", 
+                marginTop: "10px", 
               }}
             >
               Logout

@@ -30,14 +30,19 @@ const CustomModal = ({
           transform: "translate(-50%, -50%)",
           width: "90%",
           maxWidth: "400px",
-          bgcolor: "background.paper",
-          boxShadow: 24,
+          bgcolor: "#fff",
+          boxShadow: "0 0 20px rgba(0, 0, 0, 0.1)", 
           p: 4,
         }}
       >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Selected Time Slot
-        </Typography>
+       <Typography
+  id="modal-modal-title"
+  variant="h6"
+  component="h2"
+  sx={{ color: "#ff5722" }} 
+>
+  Selected Time Slot
+</Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           <p>{`Day: ${selectedTimeSlot.day}`}</p>
           <p>{`Time: ${selectedTimeSlot.time}`}</p>
@@ -92,7 +97,6 @@ const SalesView = ({ username, users }) => {
   useEffect(() => {
     const fetchUserAvailability = async () => {
       try {
-        // console.log("Request parameters:", { physioId: 1, username });
         const response = await fetch(
           `https://slottheschedule.onrender.com/physioview/useravailability?physioId=1&username=physio@example.com`
         );
@@ -106,7 +110,6 @@ const SalesView = ({ username, users }) => {
         const data = await response.json();
         setUserAvailability(data);
       } catch (error) {
-        // console.error("Error fetching user availability:", error);
       }
     };
 
@@ -123,6 +126,7 @@ const SalesView = ({ username, users }) => {
       selectedMoment.isBefore(endMoment)
     );
   };
+
   const handleTimeSlotClick = (availability, time) => {
     setSelectedTimeSlot({
       day: selectedDay,
@@ -139,8 +143,6 @@ const SalesView = ({ username, users }) => {
     }
 
     try {
-      // console.log("Sending POST request to server...");
-
       const response = await fetch(
         "https://slottheschedule.onrender.com/physioview/choosetimeslot",
         {
@@ -169,14 +171,12 @@ const SalesView = ({ username, users }) => {
       }
 
       const data = await response.json();
-      // console.log("Allotment response:", data);
-
       setSelectedTimeSlot(null);
       setRemarks("");
     } catch (error) {
-      // console.error("Error allotting time slot:", error);
     }
   };
+
   const renderDayButtons = () => {
     const weekDays = [
       "Monday",
@@ -209,7 +209,7 @@ const SalesView = ({ username, users }) => {
     }
 
     const uniqueTimeSlots = [];
-    const filteredTimeSlots = userAvailability
+    userAvailability
       .filter(
         (availability) =>
           availability.day === selectedDay &&
@@ -231,9 +231,7 @@ const SalesView = ({ username, users }) => {
 
     return (
       <div className="time-slot-range">
-        <Typography variant="h5" gutterBottom>
-          Available Time Slots for {selectedDay}:
-        </Typography>
+        
         {uniqueTimeSlots.length > 0 ? (
           <Grid container spacing={2}>
             {uniqueTimeSlots.map((av) => (
@@ -294,13 +292,23 @@ const SalesView = ({ username, users }) => {
   };
 
   return (
-    <Box className="sales-view" component="div">
-      <Typography variant="h5" gutterBottom>
+    <Box
+      className="sales-view"
+      component="div"
+      sx={{ padding: 4, backgroundColor: "#f9f9f9", borderRadius: "8px" }}
+    >
+        <Typography variant="h4" gutterBottom sx={{ color: "#007bff", fontWeight: 700, fontSize: "2.5rem" }}>
+        Sales View
+      </Typography>
+<Typography variant="h5" gutterBottom sx={{ color: "#007bff", fontWeight: 700, fontSize: "2rem", marginBottom: "10px" }}>
         Welcome, {username}!
       </Typography>
-      <h1>Sales View</h1>
-      <div className="day-buttons">{renderDayButtons()}</div>
-      <div className="time-range-filters">
+    
+      <Grid container spacing={2}>
+        {renderDayButtons()}
+      </Grid>
+
+      <div className="time-range-filters" sx={{ marginTop: 2 }}>
         {ranges.map((range, index) => (
           <Button
             key={index}
@@ -321,7 +329,14 @@ const SalesView = ({ username, users }) => {
           </Button>
         ))}
       </div>
-      {renderTimeSlotsForDay()}
+
+      <div className="time-slot-range" sx={{ marginTop: 2 }}>
+        <Typography variant="h5" gutterBottom sx={{ color: "#007bff", fontWeight: 700, fontSize: "1.5rem" }}>
+          Available Time Slots for {selectedDay}:
+        </Typography>
+        {renderTimeSlotsForDay()}
+      </div>
+
       {renderModal()}
     </Box>
   );

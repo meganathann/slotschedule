@@ -29,13 +29,17 @@ const Login = ({ onLogin }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: 280,
+        width: 300, 
+        padding: 3, 
+        backgroundColor: "#f0f0f0", 
+        borderRadius: 8, 
+        boxShadow: "0 0 15px rgba(0, 0, 0, 0.1)", 
       }}
     >
-      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+      <Avatar sx={{ m: 1, bgcolor: "#1976D2" }}> 
         <LockOutlinedIcon />
       </Avatar>
-      <Typography component="h1" variant="h5" color={"black"}>
+      <Typography component="h1" variant="h5" color={"#333333"}> 
         Sign in
       </Typography>
 
@@ -50,7 +54,7 @@ const Login = ({ onLogin }) => {
         autoFocus
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", mt: 2 }} 
       />
 
       <TextField
@@ -64,10 +68,10 @@ const Login = ({ onLogin }) => {
         autoComplete="current-password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", mt: 2 }} 
       />
 
-      <Button type="submit" variant="contained" color="primary" fullWidth>
+      <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 3 }}>
         SignIn
       </Button>
     </Box>

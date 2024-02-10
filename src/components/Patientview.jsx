@@ -5,6 +5,11 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Slide from "@mui/material/Slide";
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import Grow from '@mui/material/Grow';
+
+import CircularProgress from "@mui/material/CircularProgress";
 
 const PatientView = ({ username }) => {
   const [physiosAvailability, setPhysiosAvailability] = useState([]);
@@ -12,6 +17,7 @@ const PatientView = ({ username }) => {
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState(null);
   const [userAvailability, setUserAvailability] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPhysiosAvailability = async () => {
@@ -26,6 +32,7 @@ const PatientView = ({ username }) => {
 
         const data = await response.json();
         setUserAvailability(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching physio availability:", error.message);
       }
@@ -63,32 +70,41 @@ const PatientView = ({ username }) => {
 
     return (
       <div className="time-slot-range">
-        <Typography variant="h5" gutterBottom>
+        <Typography variant="h5" gutterBottom sx={{ color: "#007bff", fontSize: "2rem" }}>
           Available Time Slots for {selectedDay}:
         </Typography>
         {filteredTimeSlots.length > 0 ? (
           <Grid container spacing={2}>
             {filteredTimeSlots.map((time) => (
-              <Grid item key={time}>
-                <Button
-                  variant="contained"
-                  className={`time-slot ${
-                    selectedTimeSlot &&
-                    selectedTimeSlot.day === selectedDay &&
-                    selectedTimeSlot.time === time
-                      ? "selected"
-                      : ""
-                  }`}
-                  onClick={() =>
-                    handleTimeSlotClick({
-                      day: selectedDay,
-                      time,
-                    })
-                  }
-                >
-                  {time}
-                </Button>
-              </Grid>
+              <Slide direction="up" in={!loading} key={time}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    className={`time-slot ${
+                      selectedTimeSlot &&
+                      selectedTimeSlot.day === selectedDay &&
+                      selectedTimeSlot.time === time
+                        ? "selected"
+                        : ""
+                    }`}
+                    onClick={() =>
+                      handleTimeSlotClick({
+                        day: selectedDay,
+                        time,
+                      })
+                    }
+                    sx={{
+                      backgroundColor: "#4CAF50",
+                      color: "#fff",
+                      fontSize: "1rem",
+                      boxShadow: "0 3px 5px 2px rgba(0, 0, 0, 0.2)",
+                      // Add other styles as needed
+                    }}
+                  >
+                    {time}
+                  </Button>
+                </Grid>
+              </Slide>
             ))}
           </Grid>
         ) : (
@@ -127,8 +143,11 @@ const PatientView = ({ username }) => {
             onClick={() => setSelectedDay(day)}
             style={{
               margin: "8px",
-              backgroundColor: selectedDay === day ? "#70a3c7" : "",
+              background: selectedDay === day
+                ? "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)"
+                : "",
               color: selectedDay === day ? "#FFFFFF" : "#000000",
+              fontSize: "1rem",
             }}
           >
             {day}
@@ -146,7 +165,7 @@ const PatientView = ({ username }) => {
               margin: "8px",
               padding: "4px 5px",
               fontSize: "0.8rem",
-              backgroundColor: isTimeRangeSelected(range) ? "#2196F3" : "",
+              background: isTimeRangeSelected(range) ? "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)" : "",
               color: isTimeRangeSelected(range) ? "#FFFFFF" : "",
               border: "1px solid #2196F3",
               cursor: "pointer",
@@ -159,6 +178,7 @@ const PatientView = ({ username }) => {
       </div>
     );
   };
+
   const isTimeInRange = (selectedTime) => {
     if (!selectedTimeRange) {
       return false;
@@ -187,42 +207,37 @@ const PatientView = ({ username }) => {
   };
 
   return (
-    <div className="patient-view">
-      <Box
-        sx={{
-          border: "1px solid #ccc",
-          padding: "10px",
-          marginBottom: "15px",
-          bgcolor: "#fff",
-        }}
-      >
-        <Typography variant="h5" gutterBottom sx={{ color: "#333" }}>
-          Welcome, {username}!
-        </Typography>
-      </Box>
-      <Box
-        sx={{
-          border: "2px solid #007bff",
-          padding: "15px",
-          marginBottom: "20px",
-          bgcolor: "#fff",
-        }}
-      >
-        <Typography variant="h4" gutterBottom sx={{ color: "#007bff" }}>
-          PatientView
-        </Typography>
-      </Box>
+    <Box
+      sx={{
+        border: "1px solid #ccc",
+        padding: "10px",
+        marginBottom: "15px",
+        bgcolor: "#fff",
+        borderRadius: "8px", // Add border radius for a softer look
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Add a subtle box shadow
+      }}
+    >
+      <Typography variant="h4" gutterBottom sx={{ fontFamily: 'Roboto', color: "#007bff", fontWeight: 700, fontSize: "2.5rem" }}>
+        PatientView
+      </Typography>
+      <Typography variant="h5" gutterBottom sx={{ color: "#007bff", fontSize: "2rem" }}>
+        Welcome, {username}!
+      </Typography>
       <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            {renderDayButtons()}
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              {renderDayButtons()}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              {renderTimeSlotsForDay()}
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            {renderTimeSlotsForDay()}
-          </Grid>
-        </Grid>
+        )}
       </Paper>
-    </div>
+    </Box>
   );
 };
 
