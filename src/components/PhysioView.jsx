@@ -45,7 +45,8 @@ const PhysioView = ({ physioId, username }) => {
     const selectedDateTime = moment(`${selectedDay} ${time}`, "dddd h:mm A");
     const endTime = selectedDateTime.clone().add(45, "minutes");
 
-    const isOverlapping = weeklyAvailability.some((slot) => {
+    // Check for overlapping with the current week's availability
+    const isOverlappingWeek = weeklyAvailability.some((slot) => {
       const slotStartTime = moment(`${slot.day} ${slot.time}`, "dddd h:mm A");
       return (
         selectedDateTime.isBetween(
@@ -59,7 +60,22 @@ const PhysioView = ({ physioId, username }) => {
       );
     });
 
-    if (isOverlapping) {
+    // Check for overlapping with previous slots
+    const isOverlappingPrevious = previousSlots.some((slot) => {
+      const slotStartTime = moment(`${slot.day} ${slot.time}`, "dddd h:mm A");
+      return (
+        selectedDateTime.isBetween(
+          slotStartTime,
+          slotStartTime.clone().add(45, "minutes")
+        ) ||
+        endTime.isBetween(
+          slotStartTime,
+          slotStartTime.clone().add(45, "minutes")
+        )
+      );
+    });
+
+    if (isOverlappingWeek || isOverlappingPrevious) {
       if (!alertMessage) {
         setAlertMessage(
           "Time slot cannot be selected within 45 minutes of another slot."
@@ -70,8 +86,9 @@ const PhysioView = ({ physioId, username }) => {
         }, 3000); // 3 seconds in milliseconds
       }
 
-      return;
+      return false;
     }
+
     setWeeklyAvailability((prevAvailability) => {
       const updatedAvailability = [...prevAvailability];
       const existingSlotIndex = updatedAvailability.findIndex(
@@ -101,8 +118,9 @@ const PhysioView = ({ physioId, username }) => {
     setTimeout(() => {
       setDisableTimeSlots(false);
     }, 2700000); // 45 minutes in milliseconds
-  };
 
+    return true;
+  };
   const generateTimeSlotsForDay = (day, start, end) => {
     const startTime = moment(start, "h:mm A");
     const endTime = moment(end, "h:mm A");
@@ -260,53 +278,61 @@ const PhysioView = ({ physioId, username }) => {
           {selectedDay}'s Available Time Slots
         </Typography>
         <Grid container spacing={1}>
-          {timeSlots.map((timeSlot, index) => (
-            <Grid item key={`${selectedDay}-${timeSlot.time}`}>
-              <Button
-                className={`time-slot ${timeSlot.selected ? "selected" : ""}`}
-                onClick={() =>
-                  handleAvailabilitySelectionWithTimeout(timeSlot.time)
-                }
-                style={{
-                  backgroundColor: timeSlot.available
-                    ? timeSlot.selected
-                      ? "#45aaf2"
-                      : "var(--primary-color)"
-                    : "#f1f1f1",
-                  color: timeSlot.selected ? "#fff" : "#45aaf2",
-                  borderRadius: "4px",
-                  padding: "10px",
-                  margin: "5px",
-                  border: timeSlot.available ? "1px solid #45aaf2" : "none",
-                  borderColor: timeSlot.available ? "#45aaf2" : "none",
-                  ...(timeSlot.available &&
-                    index === hoveredIndex && {
-                      backgroundColor: "#45aaf2",
-                      color: "#fff",
-                      borderColor: "#61dafb",
-                      cursor: "pointer",
-                    }),
-                }}
-                variant={
-                  timeSlot.available && timeSlot.selected
-                    ? "contained"
-                    : timeSlot.available
-                    ? "outlined"
-                    : "disabled"
-                }
-                disabled={previousSlots.some(
-                  (slot) =>
-                    slot.day === selectedDay && slot.time === timeSlot.time
+          {timeSlots.map((timeSlot, index) => {
+            const isPreviouslySelected = previousSlots.some(
+              (slot) => slot.day === selectedDay && slot.time === timeSlot.time
+            );
+
+            return (
+              <Grid item key={`${selectedDay}-${timeSlot.time}`}>
+                <Button
+                  className={`time-slot ${timeSlot.selected ? "selected" : ""}`}
+                  onClick={() =>
+                    handleAvailabilitySelectionWithTimeout(timeSlot.time)
+                  }
+                  style={{
+                    backgroundColor: timeSlot.available
+                      ? timeSlot.selected
+                        ? "#45aaf2"
+                        : "var(--primary-color)"
+                      : "#f1f1f1",
+                    color: timeSlot.selected ? "#fff" : "#45aaf2",
+                    borderRadius: "4px",
+                    padding: "10px",
+                    margin: "5px",
+                    border: timeSlot.available ? "1px solid #45aaf2" : "none",
+                    borderColor: timeSlot.available ? "#45aaf2" : "none",
+                    ...(timeSlot.available &&
+                      index === hoveredIndex && {
+                        backgroundColor: "#45aaf2",
+                        color: "#fff",
+                        borderColor: "#61dafb",
+                        cursor: "pointer",
+                      }),
+                  }}
+                  variant={
+                    timeSlot.available && timeSlot.selected
+                      ? "contained"
+                      : timeSlot.available
+                      ? "outlined"
+                      : "disabled"
+                  }
+                  disabled={isPreviouslySelected}
+                  onMouseEnter={() => {
+                    if (timeSlot.available) setHoveredIndex(index);
+                  }}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
+                  {timeSlot.time}
+                </Button>
+                {isPreviouslySelected && (
+                  <Typography variant="body2" sx={{ color: "red" }}>
+                    Already booked
+                  </Typography>
                 )}
-                onMouseEnter={() => {
-                  if (timeSlot.available) setHoveredIndex(index);
-                }}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                {timeSlot.time}
-              </Button>
-            </Grid>
-          ))}
+              </Grid>
+            );
+          })}
         </Grid>
       </Paper>
     );
@@ -490,10 +516,20 @@ const PhysioView = ({ physioId, username }) => {
         `https://slottheschedule.onrender.com/physioview/useravailability?physioId=${physioId}&username=${username}`
       );
       const userAvailability = await response.json();
-      setPreviousSlots(userAvailability);
+
+      // Sort previous slots by day and time
+      const sortedPreviousSlots = userAvailability.sort((a, b) => {
+        const dayComparison = moment(a.day, "dddd").diff(moment(b.day, "dddd"));
+        return dayComparison !== 0
+          ? dayComparison
+          : moment(a.time, "h:mm A").diff(moment(b.time, "h:mm A"));
+      });
+
+      setPreviousSlots(sortedPreviousSlots);
       setPreviousSlotsModalOpen(true);
     } catch (error) {
-      // console.error("Error fetching previous time slots:", error);
+      // Handle error fetching previous time slots
+      console.error("Error fetching previous time slots:", error);
     }
   };
 
@@ -510,9 +546,9 @@ const PhysioView = ({ physioId, username }) => {
       return acc;
     }, {});
 
-    const uniqueTimes = [...new Set(previousSlots.map((slot) => slot.time))];
-
-    uniqueTimes.sort((a, b) => moment(a, "h:mm A").diff(moment(b, "h:mm A")));
+    const uniqueTimes = [
+      ...new Set(previousSlots.map((slot) => slot.time)),
+    ].sort((a, b) => moment(a, "h:mm A").diff(moment(b, "h:mm A")));
 
     return (
       <Modal
