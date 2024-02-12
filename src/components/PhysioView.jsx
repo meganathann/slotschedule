@@ -45,7 +45,6 @@ const PhysioView = ({ physioId, username }) => {
     const selectedDateTime = moment(`${selectedDay} ${time}`, "dddd h:mm A");
     const endTime = selectedDateTime.clone().add(45, "minutes");
 
-    // Check for overlapping with the current week's availability
     const isOverlappingWeek = weeklyAvailability.some((slot) => {
       const slotStartTime = moment(`${slot.day} ${slot.time}`, "dddd h:mm A");
       return (
@@ -60,7 +59,6 @@ const PhysioView = ({ physioId, username }) => {
       );
     });
 
-    // Check for overlapping with previous slots
     const isOverlappingPrevious = previousSlots.some((slot) => {
       const slotStartTime = moment(`${slot.day} ${slot.time}`, "dddd h:mm A");
       return (
@@ -517,7 +515,6 @@ const PhysioView = ({ physioId, username }) => {
       );
       const userAvailability = await response.json();
 
-      // Sort previous slots by day and time
       const sortedPreviousSlots = userAvailability.sort((a, b) => {
         const dayComparison = moment(a.day, "dddd").diff(moment(b.day, "dddd"));
         return dayComparison !== 0
@@ -528,7 +525,6 @@ const PhysioView = ({ physioId, username }) => {
       setPreviousSlots(sortedPreviousSlots);
       setPreviousSlotsModalOpen(true);
     } catch (error) {
-      // Handle error fetching previous time slots
       console.error("Error fetching previous time slots:", error);
     }
   };
@@ -619,7 +615,7 @@ const PhysioView = ({ physioId, username }) => {
         marginBottom: "15px",
         maxWidth: "800px",
         margin: "auto",
-        backgroundColor: "#f9f9f9", // Updated background color
+        backgroundColor: "#f9f9f9",
       }}
     >
       <Typography
